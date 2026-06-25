@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro版实时盯盘系统 v3.4 (全中文极客版)</title>
+    <title>Pro版实时盯盘系统 v3.5 (优化触屏删除)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
@@ -400,7 +400,6 @@
 
             const option = {
                 backgroundColor: 'transparent',
-                // ==== 强势修改：悬浮窗全中文专业格式化 ====
                 tooltip: { 
                     trigger: 'axis', 
                     axisPointer: { type: 'cross', label: { backgroundColor: '#374151' } },
@@ -412,7 +411,6 @@
                         for (let i = 0; i < params.length; i++) {
                             if (params[i].seriesName === 'K线') {
                                 let val = params[i].value;
-                                // val 的结构为: [categoryName, open, close, lowest, highest]
                                 res += '<div class="leading-relaxed">';
                                 res += params[i].marker + ' <span class="text-gray-400">开盘：</span>' + val[1].toFixed(2) + '&nbsp;&nbsp;<span class="text-gray-400">收盘：</span><span class="' + (val[2]>=val[1]?'text-red-400':'text-green-400') + ' font-bold">' + val[2].toFixed(2) + '</span><br/>';
                                 res += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-400">最低：</span><span class="text-green-400">' + val[3].toFixed(2) + '</span>&nbsp;&nbsp;<span class="text-gray-400">最高：</span><span class="text-red-400">' + val[4].toFixed(2) + '</span>';
@@ -427,7 +425,6 @@
                         return res;
                     }
                 },
-                // ==========================================
                 legend: { data: ['K线', 'MA5', 'MA10', 'MA20'], textStyle: { color: '#9CA3AF' }, top: 0 },
                 grid: { left: '12%', right: '5%', bottom: '10%', top: '15%' },
                 xAxis: { type: 'category', data: categoryData, axisLine: { lineStyle: { color: '#4B5563' } } },
@@ -445,7 +442,7 @@
         window.addEventListener('resize', () => { if (myChart) myChart.resize(); });
 
         /* =========================================
-           自选股逻辑
+           自选股逻辑：强势修复手机端无法删除的问题
            ========================================= */
         function updateWatchlistButtonState() {
             const btn = document.getElementById('btn-toggle-watchlist');
@@ -470,11 +467,12 @@
         }
 
         function removeFromWatchlist(event, code) {
+            // 阻止冒泡，避免点击删除时误触进详情页
             event.stopPropagation();
             if(confirm('确定要移出自选吗？')) {
                 myStocks = myStocks.filter(item => item !== code);
                 localStorage.setItem('myWatchlist', JSON.stringify(myStocks));
-                fetchWatchlist();
+                fetchWatchlist(); // 重新渲染列表
             }
         }
 
@@ -503,18 +501,19 @@
                             const colorClass = changeAmount > 0 ? 'text-red-500' : (changeAmount < 0 ? 'text-green-500' : 'text-white');
                             const sign = changeAmount > 0 ? '+' : '';
 
+                            // ==== 修复说明：这里把删除按钮设置成了永久显示，并改成了垃圾桶图标 ====
                             htmlContent += `
-                                <div onclick="openDetail('${code}')" class="bg-gray-800 rounded-xl p-4 shadow-lg flex justify-between items-center relative transition-transform hover:scale-[1.02] border border-gray-700 hover:border-blue-500/50 group cursor-pointer">
+                                <div onclick="openDetail('${code}')" class="bg-gray-800 rounded-xl p-4 shadow-lg flex justify-between items-center relative transition-transform hover:scale-[1.02] border border-gray-700 hover:border-blue-500/50 cursor-pointer">
                                     <div>
-                                        <div class="text-lg font-bold group-hover:text-blue-400 transition-colors">${name}</div>
+                                        <div class="text-lg font-bold transition-colors">${name}</div>
                                         <div class="text-xs text-gray-400 mt-1 uppercase">${code}</div>
                                     </div>
-                                    <div class="text-right ${colorClass} pr-4">
+                                    <div class="text-right ${colorClass} pr-12">
                                         <div class="text-2xl font-bold">${price}</div>
                                         <div class="text-sm mt-1">${sign}${changeAmount} (${sign}${changePercent}%)</div>
                                     </div>
-                                    <button onclick="removeFromWatchlist(event, '${code}')" class="absolute top-1/2 right-2 -translate-y-1/2 text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-gray-900 rounded-full">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    <button onclick="removeFromWatchlist(event, '${code}')" class="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-red-500 bg-gray-700 hover:bg-gray-600 rounded-full p-2 transition-colors z-10" title="删除">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
                                 </div>
                             `;
