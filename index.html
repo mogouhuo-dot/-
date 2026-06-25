@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro版实时盯盘系统 v3.2 (搜索直显90天)</title>
+    <title>Pro版实时盯盘系统 v3.4 (全中文极客版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
@@ -18,7 +18,6 @@
 <body class="bg-gray-900 text-white font-sans antialiased overflow-x-hidden">
 
     <div id="main-screen" class="max-w-5xl mx-auto p-4 space-y-6 pb-20">
-        
         <div class="bg-gray-800 rounded-xl p-5 shadow-lg border border-gray-700">
             <h2 class="text-xl font-bold mb-4 text-blue-400">行情搜索</h2>
             <div class="flex gap-2">
@@ -56,6 +55,43 @@
                             <tbody id="main-history-table-body" class="divide-y divide-gray-800">
                                 </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <div id="search-result-summary" class="mt-3 bg-gray-900 rounded-xl p-4 border border-gray-700 hidden">
+                    <h3 class="text-sm font-bold text-gray-400 mb-3 flex items-center border-b border-gray-800 pb-2">
+                        <svg class="w-4 h-4 mr-1 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        90天数据总结
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="bg-gray-800 p-3 rounded-lg border border-gray-700">
+                            <div class="text-xs text-gray-400">收盘最高价</div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="sum-close-high" class="text-lg font-bold text-red-400">--</span>
+                                <span id="sum-close-high-date" class="text-xs text-gray-500">--</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded-lg border border-gray-700">
+                            <div class="text-xs text-gray-400">收盘最低价</div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="sum-close-low" class="text-lg font-bold text-green-400">--</span>
+                                <span id="sum-close-low-date" class="text-xs text-gray-500">--</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded-lg border border-red-900/30">
+                            <div class="text-xs text-gray-400">盘中最高价</div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="sum-intra-high" class="text-lg font-bold text-red-500">--</span>
+                                <span id="sum-intra-high-date" class="text-xs text-gray-500">--</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded-lg border border-green-900/30">
+                            <div class="text-xs text-gray-400">盘中最低价</div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="sum-intra-low" class="text-lg font-bold text-green-500">--</span>
+                                <span id="sum-intra-low-date" class="text-xs text-gray-500">--</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,14 +133,14 @@
                     <div id="detail-change" class="text-xl font-bold mt-1">--</div>
                 </div>
                 <div class="bg-gray-800 p-3 rounded-xl border border-red-900/40">
-                    <div class="text-xs text-gray-400">区间最高</div>
+                    <div class="text-xs text-gray-400">当前视角最高</div>
                     <div class="flex justify-between items-end mt-1">
                         <span id="period-high" class="text-xl font-bold text-red-500">--</span>
                         <span id="period-high-date" class="text-xs text-gray-500">--</span>
                     </div>
                 </div>
                 <div class="bg-gray-800 p-3 rounded-xl border border-green-900/40">
-                    <div class="text-xs text-gray-400">区间最低</div>
+                    <div class="text-xs text-gray-400">当前视角最低</div>
                     <div class="flex justify-between items-end mt-1">
                         <span id="period-low" class="text-xl font-bold text-green-500">--</span>
                         <span id="period-low-date" class="text-xs text-gray-500">--</span>
@@ -115,7 +151,7 @@
             <div class="bg-gray-800 rounded-xl p-3 border border-gray-700">
                 <div class="flex gap-2 mb-3 overflow-x-auto pb-1">
                     <button onclick="renderChart(1)" class="k-btn px-4 py-1.5 text-sm bg-gray-700 rounded-full hover:bg-blue-600">1分K</button>
-                    <button onclick="renderChart(101)" class="k-btn px-4 py-1.5 text-sm bg-blue-600 rounded-full hover:bg-blue-600">日K(90天)</button>
+                    <button onclick="renderChart(101)" class="k-btn px-4 py-1.5 text-sm bg-blue-600 rounded-full hover:bg-blue-600">日K</button>
                     <button onclick="renderChart(103)" class="k-btn px-4 py-1.5 text-sm bg-gray-700 rounded-full hover:bg-blue-600">月K</button>
                     <button onclick="renderChart(104)" class="k-btn px-4 py-1.5 text-sm bg-gray-700 rounded-full hover:bg-blue-600">季K</button>
                     <button onclick="renderChart(105)" class="k-btn px-4 py-1.5 text-sm bg-gray-700 rounded-full hover:bg-blue-600">年K</button>
@@ -131,12 +167,8 @@
         let currentSecId = '';
         let currentTencentCode = '';
         let detailPolling = null;
-
         let myStocks = JSON.parse(localStorage.getItem('myWatchlist')) || ['sh000001', 'sh600519', 'sz002594'];
 
-        /* =========================================
-           主页逻辑：搜索并直接渲染明细表
-           ========================================= */
         function executeSearch() {
             const inputVal = document.getElementById('search-input').value.trim().toLowerCase();
             if (!inputVal) return alert("请输入股票代码！");
@@ -148,7 +180,6 @@
             const tCode = prefix + codeNum;
             const secid = (prefix === 'sh' ? '1.' : '0.') + codeNum;
 
-            // 1. 获取腾讯实时价格生成卡片
             const script = document.createElement('script');
             script.src = `https://qt.gtimg.cn/q=${tCode}`;
             script.onload = () => {
@@ -178,7 +209,6 @@
                         </div>
                     `;
 
-                    // 2. 卡片加载成功后，自动拉取 90 天数据并在卡片下方显示表格
                     fetchMainScreenHistory(secid);
 
                 } else {
@@ -189,7 +219,6 @@
             document.head.appendChild(script);
         }
 
-        // 新增核心功能：在主页直接获取并渲染 90 天表格
         function fetchMainScreenHistory(secid) {
             const cbName = 'jsonp_history_main_' + Date.now();
             const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${secid}&fields1=f1,f2,f3,f4,f5&fields2=f51,f52,f53,f54,f55&klt=101&fqt=1&end=20500101&lmt=90&cb=${cbName}`;
@@ -199,32 +228,51 @@
                 const klines = data.data.klines;
                 let tableRows = '';
                 
-                // 将最新日期放在最上面
+                let maxClose = -1, maxCloseDate = '';
+                let minClose = 999999, minCloseDate = '';
+                let maxIntra = -1, maxIntraDate = '';
+                let minIntra = 999999, minIntraDate = '';
+
                 [...klines].reverse().forEach(line => {
                     const parts = line.split(',');
-                    // 格式: 日期,开盘,收盘,最高,最低
                     const date = parts[0];
-                    const open = parseFloat(parts[1]).toFixed(2);
-                    const close = parseFloat(parts[2]).toFixed(2);
-                    const high = parseFloat(parts[3]).toFixed(2);
-                    const low = parseFloat(parts[4]).toFixed(2);
+                    const open = parseFloat(parts[1]);
+                    const close = parseFloat(parts[2]);
+                    const high = parseFloat(parts[3]);
+                    const low = parseFloat(parts[4]);
                     
-                    // 判断红绿：收盘价 >= 开盘价 即为红
-                    const color = parseFloat(parts[2]) >= parseFloat(parts[1]) ? 'text-red-400' : 'text-green-400';
+                    if(close > maxClose) { maxClose = close; maxCloseDate = date; }
+                    if(close < minClose) { minClose = close; minCloseDate = date; }
+                    if(high > maxIntra) { maxIntra = high; maxIntraDate = date; }
+                    if(low < minIntra) { minIntra = low; minIntraDate = date; }
+                    
+                    const color = close >= open ? 'text-red-400' : 'text-green-400';
 
                     tableRows += `
                         <tr class="hover:bg-gray-800 transition-colors">
                             <td class="p-2 md:p-3 text-gray-300">${date}</td>
-                            <td class="p-2 md:p-3">${open}</td>
-                            <td class="p-2 md:p-3 font-bold ${color}">${close}</td>
-                            <td class="p-2 md:p-3 text-gray-300">${high}</td>
-                            <td class="p-2 md:p-3 text-gray-300">${low}</td>
+                            <td class="p-2 md:p-3">${open.toFixed(2)}</td>
+                            <td class="p-2 md:p-3 font-bold ${color}">${close.toFixed(2)}</td>
+                            <td class="p-2 md:p-3 text-gray-300">${high.toFixed(2)}</td>
+                            <td class="p-2 md:p-3 text-gray-300">${low.toFixed(2)}</td>
                         </tr>
                     `;
                 });
 
                 document.getElementById('main-history-table-body').innerHTML = tableRows;
                 document.getElementById('search-result-history').classList.remove('hidden');
+
+                document.getElementById('sum-close-high').innerText = maxClose.toFixed(2);
+                document.getElementById('sum-close-high-date').innerText = maxCloseDate;
+                document.getElementById('sum-close-low').innerText = minClose.toFixed(2);
+                document.getElementById('sum-close-low-date').innerText = minCloseDate;
+                document.getElementById('sum-intra-high').innerText = maxIntra.toFixed(2);
+                document.getElementById('sum-intra-high-date').innerText = maxIntraDate;
+                document.getElementById('sum-intra-low').innerText = minIntra.toFixed(2);
+                document.getElementById('sum-intra-low-date').innerText = minIntraDate;
+                
+                document.getElementById('search-result-summary').classList.remove('hidden');
+
                 delete window[cbName];
             };
 
@@ -234,9 +282,6 @@
             document.head.appendChild(script);
         }
 
-        /* =========================================
-           详情页逻辑 (K线与自选股管理)
-           ========================================= */
         function openDetail(tCode) {
             currentTencentCode = tCode;
             const codeNum = tCode.replace(/[^0-9]/g, '');
@@ -283,7 +328,6 @@
 
                         document.getElementById('detail-price').innerText = price.toFixed(2);
                         document.getElementById('detail-price').className = `text-2xl font-bold mt-1 ${colorClass}`;
-                        
                         document.getElementById('detail-change').innerText = `${sign}${changeAmount} (${sign}${changePercent}%)`;
                         document.getElementById('detail-change').className = `text-xl font-bold mt-1 ${colorClass}`;
                     }
@@ -298,7 +342,7 @@
             event && event.target.classList.replace('bg-gray-700', 'bg-blue-600');
 
             const cbName = 'jsonp_kline_detail_' + Date.now();
-            const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${currentSecId}&fields1=f1,f2,f3,f4,f5&fields2=f51,f52,f53,f54,f55&klt=${klt}&fqt=1&end=20500101&lmt=90&cb=${cbName}`;
+            const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${currentSecId}&fields1=f1,f2,f3,f4,f5&fields2=f51,f52,f53,f54,f55&klt=${klt}&fqt=1&end=20500101&lmt=150&cb=${cbName}`;
 
             window[cbName] = function(data) {
                 if (!data || !data.data || !data.data.klines) return;
@@ -356,7 +400,34 @@
 
             const option = {
                 backgroundColor: 'transparent',
-                tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+                // ==== 强势修改：悬浮窗全中文专业格式化 ====
+                tooltip: { 
+                    trigger: 'axis', 
+                    axisPointer: { type: 'cross', label: { backgroundColor: '#374151' } },
+                    backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                    textStyle: { color: '#fff', fontSize: 12 },
+                    borderColor: '#4B5563',
+                    formatter: function (params) {
+                        let res = '<div class="font-bold border-b border-gray-600 pb-1 mb-1">' + params[0].name + '</div>';
+                        for (let i = 0; i < params.length; i++) {
+                            if (params[i].seriesName === 'K线') {
+                                let val = params[i].value;
+                                // val 的结构为: [categoryName, open, close, lowest, highest]
+                                res += '<div class="leading-relaxed">';
+                                res += params[i].marker + ' <span class="text-gray-400">开盘：</span>' + val[1].toFixed(2) + '&nbsp;&nbsp;<span class="text-gray-400">收盘：</span><span class="' + (val[2]>=val[1]?'text-red-400':'text-green-400') + ' font-bold">' + val[2].toFixed(2) + '</span><br/>';
+                                res += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-gray-400">最低：</span><span class="text-green-400">' + val[3].toFixed(2) + '</span>&nbsp;&nbsp;<span class="text-gray-400">最高：</span><span class="text-red-400">' + val[4].toFixed(2) + '</span>';
+                                res += '</div>';
+                            } else {
+                                let val = params[i].value;
+                                if (val !== '-' && val !== undefined && !isNaN(val)) {
+                                    res += '<div class="mt-1">' + params[i].marker + ' ' + params[i].seriesName + '：<span class="font-bold">' + Number(val).toFixed(2) + '</span></div>';
+                                }
+                            }
+                        }
+                        return res;
+                    }
+                },
+                // ==========================================
                 legend: { data: ['K线', 'MA5', 'MA10', 'MA20'], textStyle: { color: '#9CA3AF' }, top: 0 },
                 grid: { left: '12%', right: '5%', bottom: '10%', top: '15%' },
                 xAxis: { type: 'category', data: categoryData, axisLine: { lineStyle: { color: '#4B5563' } } },
