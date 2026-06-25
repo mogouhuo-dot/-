@@ -203,3 +203,216 @@
         }
 
         function closeDetail() {
+            document.getElementById('detail-screen').classList.add('hidden');
+            document.getElementById('main-screen').classList.remove('hidden');
+            if (detailPolling) clearInterval(detailPolling); // 关闭详情页更新
+            fetchWatchlist(); // 返回主页时立刻刷新一次自选股列表
+        }
+
+        /* =========================================
+           详情页内部逻辑 (拉取数据、K线、自选股控制)
+           ========================================= */
+        function fetchDetailData() {
+            if (!currentTencentCode) return;
+            const script = document.createElement('script');
+            script.src = `https://qt.gtimg.cn/q=${currentTencentCode}`;
+            script.onload = () => {
+                const dataStr = window[`v_${currentTencentCode}`];
+                if (dataStr) {
+                    const details = dataStr.split('~');
+                    if (details.length > 49) {
+                        // 导航栏
+                        document.getElementById('nav-name').innerText = details[1];
+                        document.getElementById('nav-code').innerText = currentTencentCode;
+
+                        // 核心价格
+                        const price = parseFloat(details[3]);
+                        const changeAmount = parseFloat(details[31]);
+                        const changePercent = parseFloat(details[32]);
+                        const sign = changeAmount > 0 ? '+' : '';
+                        const colorClass = changeAmount > 0 ? 'text-red-500' : (changeAmount < 0 ? 'text-green-500' : 'text-white');
+
+                        document.getElementById('detail-price').innerText = price.toFixed(2);
+                        document.getElementById('detail-price').className = `text-2xl font-bold mt-1 ${colorClass}`;
+                        
+                        document.getElementById('detail-change').innerText = `${sign}${changeAmount} (${sign}${changePercent}%)`;
+                        document.getElementById('detail-change').className = `text-xl font-bold mt-1 ${colorClass}`;
+
+                        document.getElementById('detail-pe').innerText = details[39] || '--';
+                        document.getElementById('detail-vol-ratio').innerText = details[49] || '--';
+                    }
+                }
+                document.head.removeChild(script);
+            };
+            document.head.appendChild(script);
+        }
+
+        function renderChart(klt) {
+            document.querySelectorAll('.k-btn').forEach(btn => btn.classList.replace('bg-blue-600', 'bg-gray-700'));
+            event && event.target.classList.replace('bg-gray-700', 'bg-blue-600');
+
+            const cbName = 'jsonp_kline_' + Date.now();
+            const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${currentSecId}&fields1=f1,f2,f3,f4,f5&fields2=f51,f52,f53,f54,f55&klt=${klt}&fqt=1&end=20500101&lmt=150&cb=${cbName}`;
+
+            window[cbName] = function(data) {
+                if (!data || !data.data || !data.data.klines) return;
+                const klines = data.data.klines;
+                
+                let maxHigh = -1, maxHighDate = '';
+                let minLow = 999999, minLowDate = '';
+
+                klines.forEach(line => {
+                    const parts = line.split(',');
+                    const dateStr = parts[0].length > 10 ? parts[0].substring(5,16) : parts[0]; 
+                    const high = parseFloat(parts[3]);
+                    const low = parseFloat(parts[4]);
+                    if (high > maxHigh) { maxHigh = high; maxHighDate = dateStr; }
+                    if (low < minLow) { minLow = low; minLowDate = dateStr; }
+                });
+
+                document.getElementById('period-high').innerText = maxHigh.toFixed(2);
+                document.getElementById('period-high-date').innerText = maxHighDate;
+                document.getElementById('period-low').innerText = minLow.toFixed(2);
+                document.getElementById('period-low-date').innerText = minLowDate;
+
+                drawEChart(klines);
+                delete window[cbName];
+            };
+
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = () => document.head.removeChild(script);
+            document.head.appendChild(script);
+        }
+
+        function calculateMA(dayCount, data) {
+            let result = [];
+            for (let i = 0, len = data.length; i < len; i++) {
+                if (i < dayCount) { result.push('-'); continue; }
+                let sum = 0;
+                for (let j = 0; j < dayCount; j++) sum += data[i - j][1];
+                result.push(+(sum / dayCount).toFixed(2));
+            }
+            return result;
+        }
+
+        function drawEChart(klines) {
+            if (!myChart) myChart = echarts.init(document.getElementById('kline-chart'));
+            const categoryData = [];
+            const values = []; 
+
+            klines.forEach(line => {
+                const parts = line.split(',');
+                const timeStr = parts[0].length > 10 ? parts[0].substring(5,16) : parts[0]; 
+                categoryData.push(timeStr);
+                values.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[4]), parseFloat(parts[3])]);
+            });
+
+            const option = {
+                backgroundColor: 'transparent',
+                tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+                legend: { data: ['K线', 'MA5', 'MA10', 'MA20'], textStyle: { color: '#9CA3AF' }, top: 0 },
+                grid: { left: '12%', right: '5%', bottom: '10%', top: '15%' },
+                xAxis: { type: 'category', data: categoryData, axisLine: { lineStyle: { color: '#4B5563' } } },
+                yAxis: { scale: true, axisLine: { lineStyle: { color: '#4B5563' } }, splitLine: { lineStyle: { color: '#374151', type: 'dashed' } } },
+                dataZoom: [{ type: 'inside', start: 60, end: 100 }],
+                series: [
+                    { name: 'K线', type: 'candlestick', data: values, itemStyle: { color: '#EF4444', color0: '#10B981', borderColor: '#EF4444', borderColor0: '#10B981' } },
+                    { name: 'MA5', type: 'line', data: calculateMA(5, values), smooth: true, showSymbol: false, lineStyle: { width: 1.5, color: '#F59E0B' } },
+                    { name: 'MA10', type: 'line', data: calculateMA(10, values), smooth: true, showSymbol: false, lineStyle: { width: 1.5, color: '#3B82F6' } },
+                    { name: 'MA20', type: 'line', data: calculateMA(20, values), smooth: true, showSymbol: false, lineStyle: { width: 1.5, color: '#A855F7' } }
+                ]
+            };
+            myChart.setOption(option);
+        }
+        window.addEventListener('resize', () => { if (myChart) myChart.resize(); });
+
+        /* =========================================
+           自选股逻辑 (主页列表渲染与状态切换)
+           ========================================= */
+        function updateWatchlistButtonState() {
+            const btn = document.getElementById('btn-toggle-watchlist');
+            if (myStocks.includes(currentTencentCode)) {
+                btn.innerText = "- 取消自选";
+                btn.className = "bg-gray-700 hover:bg-gray-600 text-sm px-3 py-1.5 rounded text-white transition-colors border border-gray-600";
+            } else {
+                btn.innerText = "+ 加自选";
+                btn.className = "bg-green-600 hover:bg-green-700 text-sm px-3 py-1.5 rounded text-white transition-colors";
+            }
+        }
+
+        function toggleWatchlist() {
+            if (!currentTencentCode) return;
+            if (myStocks.includes(currentTencentCode)) {
+                myStocks = myStocks.filter(item => item !== currentTencentCode);
+            } else {
+                myStocks.push(currentTencentCode);
+            }
+            localStorage.setItem('myWatchlist', JSON.stringify(myStocks));
+            updateWatchlistButtonState();
+        }
+
+        function removeFromWatchlist(event, code) {
+            event.stopPropagation(); // 阻止点击删除按钮时触发整个卡片的跳转
+            if(confirm('确定要移出自选吗？')) {
+                myStocks = myStocks.filter(item => item !== code);
+                localStorage.setItem('myWatchlist', JSON.stringify(myStocks));
+                fetchWatchlist();
+            }
+        }
+
+        function fetchWatchlist() {
+            const container = document.getElementById('stock-container');
+            if (document.getElementById('main-screen').classList.contains('hidden')) return; // 如果在详情页，不刷新主页列表
+            if (myStocks.length === 0) {
+                container.innerHTML = '<div class="text-gray-500 col-span-3 text-center py-10 bg-gray-800 rounded-xl border border-gray-700 border-dashed">自选股为空，请在上方搜索添加。</div>';
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://qt.gtimg.cn/q=${myStocks.join(',')}`;
+            script.onload = () => {
+                let htmlContent = '';
+                myStocks.forEach(code => {
+                    const dataStr = window[`v_${code}`];
+                    if (dataStr) {
+                        const details = dataStr.split('~');
+                        if (details.length > 30) {
+                            const name = details[1];
+                            const price = parseFloat(details[3]).toFixed(2);
+                            const changeAmount = parseFloat(details[31]);
+                            const changePercent = parseFloat(details[32]);
+                            
+                            const colorClass = changeAmount > 0 ? 'text-red-500' : (changeAmount < 0 ? 'text-green-500' : 'text-white');
+                            const sign = changeAmount > 0 ? '+' : '';
+
+                            htmlContent += `
+                                <div onclick="openDetail('${code}')" class="bg-gray-800 rounded-xl p-4 shadow-lg flex justify-between items-center relative transition-transform hover:scale-[1.02] border border-gray-700 hover:border-blue-500/50 group cursor-pointer">
+                                    <div>
+                                        <div class="text-lg font-bold group-hover:text-blue-400 transition-colors">${name}</div>
+                                        <div class="text-xs text-gray-400 mt-1 uppercase">${code}</div>
+                                    </div>
+                                    <div class="text-right ${colorClass} pr-4">
+                                        <div class="text-2xl font-bold">${price}</div>
+                                        <div class="text-sm mt-1">${sign}${changeAmount} (${sign}${changePercent}%)</div>
+                                    </div>
+                                    <button onclick="removeFromWatchlist(event, '${code}')" class="absolute top-1/2 right-2 -translate-y-1/2 text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-gray-900 rounded-full">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                });
+                container.innerHTML = htmlContent;
+                document.head.removeChild(script); 
+            };
+            document.head.appendChild(script);
+        }
+
+        // 启动主页定时器
+        fetchWatchlist();
+        setInterval(fetchWatchlist, 3000);
+    </script>
+</body>
+</html>
