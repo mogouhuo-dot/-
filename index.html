@@ -3,80 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>极简实时盯盘 + 90天历史</title>
+    <title>Pro版实时盯盘系统 v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 </head>
 <body class="bg-gray-900 text-white p-4 font-sans antialiased">
     <div class="max-w-5xl mx-auto space-y-6">
         
         <div class="bg-gray-800 rounded-xl p-5 shadow-lg border border-gray-700">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                查询90天历史行情
-            </h2>
+            <h2 class="text-xl font-bold mb-4 text-blue-400">个股深度分析 & K线图</h2>
             <div class="flex gap-2 mb-4">
-                <input id="history-input" type="text" placeholder="输入代码 (如: sh600519 或 600519)" 
-                       class="flex-1 p-3 rounded-lg bg-gray-900 text-white border border-gray-600 focus:outline-none focus:border-blue-500 transition-colors" />
-                <button onclick="fetchHistory()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg text-white font-bold transition-colors">
-                    查询
+                <input id="search-input" type="text" placeholder="输入代码 (如: sh600519 或 600519)" 
+                       class="flex-1 p-3 rounded-lg bg-gray-900 text-white border border-gray-600 focus:outline-none focus:border-blue-500" />
+                <button onclick="searchStock()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg text-white font-bold transition-colors">
+                    分析
                 </button>
             </div>
             
-            <div id="history-result" class="hidden">
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="bg-gray-900 p-4 rounded-lg border border-red-900/50">
-                        <div class="text-sm text-gray-400">90天盘中最高</div>
-                        <div id="hist-high" class="text-2xl font-bold text-red-500 mt-1">--</div>
-                        <div id="hist-high-date" class="text-xs text-gray-500 mt-1">--</div>
+            <div id="detail-panel" class="hidden animate-fade-in">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 relative">
+                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700">
+                        <div class="text-xs text-gray-400">股票名称</div>
+                        <div id="detail-name" class="text-lg font-bold mt-1">--</div>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-lg border border-green-900/50">
-                        <div class="text-sm text-gray-400">90天盘中最低</div>
-                        <div id="hist-low" class="text-2xl font-bold text-green-500 mt-1">--</div>
-                        <div id="hist-low-date" class="text-xs text-gray-500 mt-1">--</div>
+                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700">
+                        <div class="text-xs text-gray-400">最新价</div>
+                        <div id="detail-price" class="text-lg font-bold mt-1">--</div>
                     </div>
+                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700">
+                        <div class="text-xs text-gray-400">量比 (实时)</div>
+                        <div id="detail-vol-ratio" class="text-lg font-bold mt-1 text-yellow-400">--</div>
+                    </div>
+                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700">
+                        <div class="text-xs text-gray-400">市盈率 (TTM)</div>
+                        <div id="detail-pe" class="text-lg font-bold mt-1 text-purple-400">--</div>
+                    </div>
+                    <button onclick="addToWatchlist()" class="absolute top-0 right-0 mt-3 mr-3 bg-green-600 hover:bg-green-700 text-xs px-3 py-1.5 rounded text-white transition-colors">
+                        + 加入自选
+                    </button>
                 </div>
-                
-                <div class="bg-gray-900 rounded-lg overflow-hidden border border-gray-700">
-                    <div class="max-h-64 overflow-y-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="text-xs text-gray-400 bg-gray-800 sticky top-0">
-                                <tr>
-                                    <th class="p-3">日期</th>
-                                    <th class="p-3">收盘</th>
-                                    <th class="p-3 hidden sm:table-cell">最高</th>
-                                    <th class="p-3 hidden sm:table-cell">最低</th>
-                                </tr>
-                            </thead>
-                            <tbody id="hist-table-body" class="divide-y divide-gray-800">
-                                </tbody>
-                        </table>
-                    </div>
+
+                <div class="flex gap-2 mb-2 overflow-x-auto pb-2">
+                    <button onclick="renderChart(1)" class="k-btn px-4 py-1 text-sm bg-gray-700 rounded-full hover:bg-blue-600">1分K</button>
+                    <button onclick="renderChart(101)" class="k-btn px-4 py-1 text-sm bg-blue-600 rounded-full hover:bg-blue-600">日K</button>
+                    <button onclick="renderChart(103)" class="k-btn px-4 py-1 text-sm bg-gray-700 rounded-full hover:bg-blue-600">月K</button>
+                    <button onclick="renderChart(104)" class="k-btn px-4 py-1 text-sm bg-gray-700 rounded-full hover:bg-blue-600">季K</button>
+                    <button onclick="renderChart(105)" class="k-btn px-4 py-1 text-sm bg-gray-700 rounded-full hover:bg-blue-600">年K</button>
                 </div>
+
+                <div id="kline-chart" class="w-full h-[350px] bg-gray-900 rounded-lg border border-gray-700 mt-2"></div>
             </div>
         </div>
 
         <hr class="border-gray-700">
         <div class="flex justify-between items-end mb-2">
-            <h1 class="text-2xl md:text-3xl font-bold">自选股实时行情</h1>
-            <span id="update-time" class="text-xs text-gray-400">加载中...</span>
+            <h1 class="text-2xl font-bold">我的自选股</h1>
+            <span class="text-xs text-gray-400">数据保存在本地浏览器</span>
         </div>
         <div id="stock-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             </div>
     </div>
 
     <script>
-        /* =========================================
-           功能一：实时行情 (腾讯接口)
-           ========================================= */
-        const stocks = ['sh000001', 'sh600519', 'sz000001', 'sz002594', 'sh510300'];
+        let myChart = null;
+        let currentSecId = '';
+        let currentTencentCode = '';
 
-        function fetchStocks() {
+        /* =========================================
+           新增核心：本地自选股管理 (LocalStorage)
+           ========================================= */
+        // 尝试从浏览器本地读取自选股，如果没有，则提供默认的几个指标股
+        let myStocks = JSON.parse(localStorage.getItem('myWatchlist')) || ['sh000001', 'sh600519', 'sz002594'];
+
+        function saveWatchlist() {
+            localStorage.setItem('myWatchlist', JSON.stringify(myStocks));
+            fetchWatchlist(); // 保存后立即刷新底部列表
+        }
+
+        function addToWatchlist() {
+            if (!currentTencentCode) return;
+            if (myStocks.includes(currentTencentCode)) {
+                alert("已经在自选股中了！");
+                return;
+            }
+            myStocks.push(currentTencentCode);
+            saveWatchlist();
+            alert("添加成功！");
+        }
+
+        function removeFromWatchlist(code) {
+            if(confirm('确定要移出自选吗？')) {
+                myStocks = myStocks.filter(item => item !== code);
+                saveWatchlist();
+            }
+        }
+
+        /* =========================================
+           深度分析与 K线图
+           ========================================= */
+        function searchStock() {
+            const inputVal = document.getElementById('search-input').value.trim().toLowerCase();
+            if (!inputVal) return alert("请输入股票代码！");
+
+            const codeNum = inputVal.replace(/[^0-9]/g, ''); 
+            if (codeNum.length !== 6) return alert("请输入6位有效的股票代码！");
+            
+            const prefix = (inputVal.startsWith('sh') || codeNum.startsWith('6')) ? 'sh' : 'sz';
+            currentTencentCode = prefix + codeNum;
+            currentSecId = (prefix === 'sh' ? '1.' : '0.') + codeNum;
+
+            fetchTencentDetail(currentTencentCode);
+            renderChart(101);
+            document.getElementById('detail-panel').classList.remove('hidden');
+        }
+
+        function fetchTencentDetail(code) {
             const script = document.createElement('script');
-            script.src = `https://qt.gtimg.cn/q=${stocks.join(',')}`;
+            script.src = `https://qt.gtimg.cn/q=${code}`;
+            script.onload = () => {
+                const dataStr = window[`v_${code}`];
+                if (dataStr) {
+                    const details = dataStr.split('~');
+                    if (details.length > 49) {
+                        document.getElementById('detail-name').innerText = details[1];
+                        const price = parseFloat(details[3]);
+                        const changeAmount = parseFloat(details[31]);
+                        const colorClass = changeAmount > 0 ? 'text-red-500' : (changeAmount < 0 ? 'text-green-500' : 'text-white');
+                        document.getElementById('detail-price').innerText = price.toFixed(2);
+                        document.getElementById('detail-price').className = `text-lg font-bold mt-1 ${colorClass}`;
+                        document.getElementById('detail-pe').innerText = details[39] || '--';
+                        document.getElementById('detail-vol-ratio').innerText = details[49] || '--';
+                    }
+                }
+                document.head.removeChild(script);
+            };
+            document.head.appendChild(script);
+        }
+
+        function renderChart(klt) {
+            document.querySelectorAll('.k-btn').forEach(btn => btn.classList.replace('bg-blue-600', 'bg-gray-700'));
+            event && event.target.classList.replace('bg-gray-700', 'bg-blue-600');
+
+            const cbName = 'jsonp_kline_' + Date.now();
+            const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${currentSecId}&fields1=f1,f2,f3,f4,f5&fields2=f51,f52,f53,f54,f55&klt=${klt}&fqt=1&end=20500101&lmt=150&cb=${cbName}`;
+
+            window[cbName] = function(data) {
+                if (!data || !data.data || !data.data.klines) return;
+                drawEChart(data.data.klines);
+                delete window[cbName];
+            };
+
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = () => document.head.removeChild(script);
+            document.head.appendChild(script);
+        }
+
+        // 新增核心：计算移动平均线 (MA)
+        function calculateMA(dayCount, data) {
+            let result = [];
+            for (let i = 0, len = data.length; i < len; i++) {
+                if (i < dayCount) {
+                    result.push('-');
+                    continue;
+                }
+                let sum = 0;
+                for (let j = 0; j < dayCount; j++) {
+                    sum += data[i - j][1]; // 取收盘价
+                }
+                result.push(+(sum / dayCount).toFixed(2));
+            }
+            return result;
+        }
+
+        function drawEChart(klines) {
+            if (!myChart) myChart = echarts.init(document.getElementById('kline-chart'));
+            
+            const categoryData = [];
+            const values = []; 
+
+            klines.forEach(line => {
+                const parts = line.split(',');
+                const timeStr = parts[0].length > 10 ? parts[0].substring(5,16) : parts[0]; 
+                categoryData.push(timeStr);
+                values.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[4]), parseFloat(parts[3])]);
+            });
+
+            // 计算均线数据
+            const dataMA5 = calculateMA(5, values);
+            const dataMA10 = calculateMA(10, values);
+            const dataMA20 = calculateMA(20, values);
+
+            const option = {
+                backgroundColor: '#111827',
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross', label: { backgroundColor: '#374151' } },
+                    backgroundColor: 'rgba(31, 41, 55, 0.9)',
+                    textStyle: { color: '#fff', fontSize: 12 },
+                    borderColor: '#4B5563'
+                },
+                legend: {
+                    data: ['K线', 'MA5', 'MA10', 'MA20'],
+                    textStyle: { color: '#9CA3AF' },
+                    top: '2%'
+                },
+                grid: { left: '10%', right: '5%', bottom: '15%', top: '12%' },
+                xAxis: {
+                    type: 'category',
+                    data: categoryData,
+                    boundaryGap: false,
+                    axisLine: { lineStyle: { color: '#4B5563' } },
+                    axisLabel: { color: '#9CA3AF' }
+                },
+                yAxis: {
+                    scale: true,
+                    axisLine: { lineStyle: { color: '#4B5563' } },
+                    axisLabel: { color: '#9CA3AF' },
+                    splitLine: { lineStyle: { color: '#374151', type: 'dashed' } }
+                },
+                dataZoom: [{ type: 'inside', start: 50, end: 100 }],
+                series: [
+                    {
+                        name: 'K线',
+                        type: 'candlestick',
+                        data: values,
+                        itemStyle: { color: '#EF4444', color0: '#10B981', borderColor: '#EF4444', borderColor0: '#10B981' }
+                    },
+                    // 新增：MA线系列
+                    { name: 'MA5', type: 'line', data: dataMA5, smooth: true, showSymbol: false, lineStyle: { width: 1.5, color: '#F59E0B' } },
+                    { name: 'MA10', type: 'line', data: dataMA10, smooth: true, showSymbol: false, lineStyle: { width: 1.5, color: '#3B82F6' } },
+                    { name: 'MA20', type: 'line', data: dataMA20, smooth: true, showSymbol: false, lineStyle: { width: 1.5, color: '#A855F7' } }
+                ]
+            };
+            myChart.setOption(option);
+        }
+        window.addEventListener('resize', () => { if (myChart) myChart.resize(); });
+
+
+        /* =========================================
+           自选股实时行情循环渲染
+           ========================================= */
+        function fetchWatchlist() {
+            if (myStocks.length === 0) {
+                document.getElementById('stock-container').innerHTML = '<div class="text-gray-500 col-span-3 text-center py-8">您的自选股为空，请在上方查询后添加。</div>';
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://qt.gtimg.cn/q=${myStocks.join(',')}`;
             script.onload = () => {
                 const container = document.getElementById('stock-container');
                 let htmlContent = '';
-                stocks.forEach(code => {
+                myStocks.forEach(code => {
                     const dataStr = window[`v_${code}`];
                     if (dataStr) {
                         const details = dataStr.split('~');
@@ -91,117 +270,34 @@
                             if (changeAmount > 0) { colorClass = 'text-red-500'; sign = '+'; } 
                             else if (changeAmount < 0) { colorClass = 'text-green-500'; }
 
+                            // 卡片右上角增加了一个红色的“X”用来删除自选股
                             htmlContent += `
-                                <div class="bg-gray-800 rounded-xl p-5 shadow-lg flex justify-between items-center transition-transform hover:scale-[1.02] border border-gray-700 hover:border-gray-500">
+                                <div class="bg-gray-800 rounded-xl p-4 shadow-lg flex justify-between items-center relative transition-transform hover:scale-[1.02] border border-gray-700 group">
                                     <div>
-                                        <div class="text-lg md:text-xl font-bold">${name}</div>
+                                        <div class="text-lg font-bold">${name}</div>
                                         <div class="text-xs text-gray-400 mt-1 uppercase">${code}</div>
                                     </div>
                                     <div class="text-right ${colorClass}">
-                                        <div class="text-2xl md:text-3xl font-bold">${price}</div>
-                                        <div class="text-sm font-medium mt-1">${sign}${changeAmount} (${sign}${changePercent}%)</div>
+                                        <div class="text-2xl font-bold">${price}</div>
+                                        <div class="text-sm mt-1">${sign}${changeAmount} (${sign}${changePercent}%)</div>
                                     </div>
+                                    <button onclick="removeFromWatchlist('${code}')" class="absolute top-2 right-2 text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1">
+                                        ✕
+                                    </button>
                                 </div>
                             `;
                         }
                     }
                 });
                 container.innerHTML = htmlContent;
-                const now = new Date();
-                document.getElementById('update-time').innerText = `最后更新: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
                 document.head.removeChild(script); 
             };
             document.head.appendChild(script);
         }
 
-        fetchStocks();
-        setInterval(fetchStocks, 3000);
-
-        /* =========================================
-           功能二：90天历史查询 (东方财富接口)
-           ========================================= */
-        function fetchHistory() {
-            const inputVal = document.getElementById('history-input').value.trim().toLowerCase();
-            if (!inputVal) return alert("请输入股票代码！");
-
-            // 智能识别代码并转换为东方财富格式 (0.代表深交所，1.代表上交所)
-            const codeNum = inputVal.replace(/[^0-9]/g, ''); 
-            if (codeNum.length !== 6) return alert("请输入6位有效的股票代码！");
-            
-            let secid = '';
-            if (inputVal.startsWith('sh') || codeNum.startsWith('6')) {
-                secid = `1.${codeNum}`; // 沪市
-            } else {
-                secid = `0.${codeNum}`; // 深市
-            }
-
-            const btn = document.querySelector('button');
-            btn.innerText = "查询中...";
-
-            // 构造东方财富 JSONP URL (lmt=90 代表90天，fqt=1 代表前复权)
-            const cbName = 'jsonp_history_' + Date.now();
-            const url = `https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=${secid}&fields1=f1,f2,f3,f4,f5&fields2=f51,f52,f53,f54,f55&klt=101&fqt=1&end=20500101&lmt=90&cb=${cbName}`;
-
-            // 全局回调函数
-            window[cbName] = function(data) {
-                btn.innerText = "查询";
-                if (!data || !data.data || !data.data.klines || data.data.klines.length === 0) {
-                    return alert("未查询到数据，请检查代码是否正确（或不支持该品种）。");
-                }
-                renderHistoryData(data.data);
-                delete window[cbName]; // 清理全局变量
-            };
-
-            const script = document.createElement('script');
-            script.src = url;
-            script.onload = () => document.head.removeChild(script); // 清理 DOM
-            script.onerror = () => { btn.innerText = "查询"; alert("网络请求失败"); };
-            document.head.appendChild(script);
-        }
-
-        function renderHistoryData(data) {
-            const klines = data.klines; // 格式: "日期,开盘,收盘,最高,最低"
-            
-            let maxHigh = -1, maxHighDate = '';
-            let minLow = 999999, minLowDate = '';
-            let tableRows = '';
-
-            // 数据默认是正序（旧到新），我们把它反转，让最新的日期显示在最上面
-            klines.reverse().forEach(line => {
-                const parts = line.split(',');
-                const date = parts[0];
-                const open = parseFloat(parts[1]);
-                const close = parseFloat(parts[2]);
-                const high = parseFloat(parts[3]);
-                const low = parseFloat(parts[4]);
-
-                // 找 90 天极值
-                if (high > maxHigh) { maxHigh = high; maxHighDate = date; }
-                if (low < minLow) { minLow = low; minLowDate = date; }
-
-                // 决定单日红绿颜色
-                const color = close >= open ? 'text-red-400' : 'text-green-400';
-
-                tableRows += `
-                    <tr class="hover:bg-gray-800 transition-colors">
-                        <td class="p-3">${date}</td>
-                        <td class="p-3 font-bold ${color}">${close.toFixed(2)}</td>
-                        <td class="p-3 hidden sm:table-cell">${high.toFixed(2)}</td>
-                        <td class="p-3 hidden sm:table-cell">${low.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-
-            // 渲染数据到页面
-            document.getElementById('hist-high').innerText = maxHigh.toFixed(2);
-            document.getElementById('hist-high-date').innerText = maxHighDate;
-            document.getElementById('hist-low').innerText = minLow.toFixed(2);
-            document.getElementById('hist-low-date').innerText = minLowDate;
-            document.getElementById('hist-table-body').innerHTML = tableRows;
-            
-            // 显示结果面板
-            document.getElementById('history-result').classList.remove('hidden');
-        }
+        // 页面启动时加载列表并开启定时器
+        fetchWatchlist();
+        setInterval(fetchWatchlist, 3000);
     </script>
 </body>
 </html>
