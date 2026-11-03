@@ -347,10 +347,10 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
     <div class="opt-row">
       <span class="lbl">挖空强度</span>
       <div class="seg" id="maskSeg">
-        <button data-k="0" onclick="setMask(0)">不挖</button>
         <button data-k="0.25" onclick="setMask(0.25)">少挖</button>
         <button class="on" data-k="0.4" onclick="setMask(0.4)">中等</button>
         <button data-k="0.6" onclick="setMask(0.6)">多挖</button>
+        <button data-k="1" onclick="setMask(1)">全挖</button>
       </div>
     </div>
     <div class="opt-row">
@@ -402,6 +402,7 @@ let settings = { dark:false, rate:0.9, gapMs:3000, repeat:1,
   showExampleLead:false, showExampleQuiz:false, quizTimer:0, muteQuiz:false };
 function loadSettings(){
   try{ Object.assign(settings, JSON.parse(localStorage.getItem(SET_KEY))||{}); }catch(e){}
+  if(!(settings.maskLevel>0)) settings.maskLevel=0.4; // 迁移旧「不挖(0)」值到默认
 }
 function saveSettings(){ try{ localStorage.setItem(SET_KEY, JSON.stringify(settings)); }catch(e){} }
 
@@ -1027,7 +1028,6 @@ function quizPool(){
 
 function maskWord(word){
   const lvl = (settings.maskLevel==null) ? 0.4 : settings.maskLevel;
-  if(lvl<=0) return word;           // 不挖空：完整显示单词
   const chars = word.split('');
   const letterIdx = [];
   chars.forEach((c,i)=>{ if(/[a-zA-Z]/.test(c)) letterIdx.push(i); });
