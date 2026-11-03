@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>雅思单词跟读</title>
+<title>雅思单词跟读 🎧</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root{
@@ -182,10 +182,8 @@
   </div>
   <div class="hint">全部本地运行 · 不上传任何数据</div>
 </header>
-
 <!-- ================= 跟读视图 ================= -->
 <div class="view active" id="view-read">
-
   <div class="panel">
     <div class="sec-head open" id="head-import" onclick="toggleSection('import')">
       <div class="sec-title">📥 词库导入 <span class="sec-sub">粘贴并解析</span></div>
@@ -199,7 +197,6 @@
 benefit /ˈbenɪfɪt/ 益处；受益
 cautious /ˈkɔːʃəs/ 谨慎的 | Be cautious with strangers.
 diverse /daɪˈvɜːs/ 多种多样的
-
 从文件导入：支持 .txt / .csv
 CSV 每行用逗号分隔：单词,音标,中文,例句
 abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
@@ -221,7 +218,6 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
       </div>
     </div>
   </div>
-
   <div class="panel">
     <div class="sec-head" id="head-history" onclick="toggleSection('history')">
       <div class="sec-title">📚 历史词库 <span class="sec-sub">本地保存多套</span></div>
@@ -239,8 +235,6 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
       <div id="libList" class="lib-list"></div>
     </div>
   </div>
-
-
   <div class="panel">
     <div class="sec-title">📊 学习统计 <span class="sec-sub" id="statsLib">未加载词库</span></div>
     <div class="stats" id="statsBox"></div>
@@ -248,7 +242,6 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
       <button class="ghost sm" onclick="clearWrongBook()">🧹 清空错题本</button>
     </div>
   </div>
-
   <div class="panel">
     <div class="sec-head" id="head-pref" onclick="toggleSection('pref')">
       <div class="sec-title">⚙️ 显示设置 <span class="sec-sub">字体大小</span></div>
@@ -266,7 +259,6 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
       </div>
     </div>
   </div>
-
   <div class="panel">
     <div class="sec-title">🎧 领读 & 卡片控制</div>
     <div class="speed">
@@ -317,7 +309,6 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
       <div class="lead-status" id="leadStatus"></div>
     </div>
   </div>
-
   <div class="row" style="margin:0 0 8px;">
     <input class="search" id="searchBox" placeholder="🔍 搜索单词/释义" oninput="doSearch()" style="flex:2;min-width:0;">
     <button class="ghost sm" id="starFilterBtn" onclick="toggleStarFilter()" style="flex:1;">⭐ 仅星标</button>
@@ -345,8 +336,16 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
       <button data-s="due" onclick="setQuizSrc('due')">久未复习</button>
     </div>
     <div class="opt-row">
+      <span class="lbl">出题顺序</span>
+      <div class="seg" id="quizShuffleSeg">
+        <button class="on" data-shuffle="1" onclick="setQuizShuffle(1)">随机打乱</button>
+        <button data-shuffle="0" onclick="setQuizShuffle(0)">按规则排序</button>
+      </div>
+    </div>
+    <div class="opt-row">
       <span class="lbl">挖空强度</span>
       <div class="seg" id="maskSeg">
+        <button data-k="0" onclick="setMask(0)">不挖空</button>
         <button data-k="0.25" onclick="setMask(0.25)">少挖</button>
         <button class="on" data-k="0.4" onclick="setMask(0.4)">中等</button>
         <button data-k="0.6" onclick="setMask(0.6)">多挖</button>
@@ -376,13 +375,11 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
   <div id="quizWrap" class="quiz-wrap hidden"></div>
   <div class="empty" id="quizEmpty">点击「开始抽查」，从当前词库随机出题</div>
 </div>
-
 <!-- ================= 底部切换 ================= -->
 <nav class="tabbar">
   <button class="on" id="tab-read" onclick="switchTab('read')"><span class="ico">📖</span>跟读</button>
   <button id="tab-quiz" onclick="switchTab('quiz')"><span class="ico">✍️</span>练习</button>
 </nav>
-
 <script>
 /* ---------- 状态 ---------- */
 let cards = [];           // {id, word, ipa, cn, status:'new'|'mastered'|'review', wrong:bool}
@@ -393,7 +390,6 @@ let currentLibId = null;  // 当前卡片所属已保存词库 id（null = 未�
 let searchTerm = '';
 let sortMode = 'seq';     // seq | rev | rand
 let starFilter = false;
-
 /* ---------- 设置 (localStorage) ---------- */
 const SET_KEY = 'ielts_settings_v1';
 let settings = { dark:false, rate:0.9, gapMs:3000, repeat:1,
@@ -403,7 +399,6 @@ function loadSettings(){
   try{ Object.assign(settings, JSON.parse(localStorage.getItem(SET_KEY))||{}); }catch(e){}
 }
 function saveSettings(){ try{ localStorage.setItem(SET_KEY, JSON.stringify(settings)); }catch(e){} }
-
 function toggleDark(){
   settings.dark = !settings.dark;
   applyDark();
@@ -414,17 +409,16 @@ function applyDark(){
   const b = document.getElementById('darkBtn');
   if(b) b.textContent = settings.dark ? '☀️' : '🌙';
 }
-
 function setFont(v){
   settings.fontScale=v; saveSettings(); applyFont();
   document.querySelectorAll('#fontSeg button').forEach(b=>b.classList.toggle('on', +b.dataset.f===v));
 }
 function applyFont(){ document.documentElement.style.setProperty('--fs', settings.fontScale||1); }
-
 /* ---------- TTS 语音准备 ---------- */
 function pickVoice(){
   const vs = speechSynthesis.getVoices();
-  gbVoice = vs.find(v=>v.lang==='en-GB')
+  gbVoice = vs.find(v=> /Daniel|Samantha/i.test(v.name) && v.lang === 'en‑GB')
+         || vs.find(v=>v.lang==='en‑GB')
          || vs.find(v=>/en[-_]GB/i.test(v.lang))
          || vs.find(v=>v.lang && v.lang.toLowerCase().startsWith('en'))
          || null;
@@ -433,7 +427,6 @@ if('speechSynthesis' in window){
   pickVoice();
   speechSynthesis.onvoiceschanged = pickVoice;
 }
-
 function speak(text){
   if(!('speechSynthesis' in window)){ alert('当前浏览器不支持语音合成'); return; }
   speechSynthesis.cancel();
@@ -444,27 +437,23 @@ function speak(text){
   speechSynthesis.speak(u);
   return u;
 }
-
 function updateRate(){
   rate = parseFloat(document.getElementById('rate').value);
   document.getElementById('rateVal').textContent = rate.toFixed(1)+'x';
   settings.rate = rate; saveSettings();
 }
-
 function updateGap(){
   const v = parseFloat(document.getElementById('gap').value);
   lead.gapMs = Math.round(v*1000);
   document.getElementById('gapVal').textContent = v.toFixed(1)+'s';
   settings.gapMs = lead.gapMs; saveSettings();
 }
-
 function updateRepeat(){
   const v = parseInt(document.getElementById('repeat').value,10);
   lead.repeat = v;
   document.getElementById('repeatVal').textContent = v+'次';
   settings.repeat = v; saveSettings();
 }
-
 /* ---------- 解析 ---------- */
 function parseLine(line){
   line = line.trim();
@@ -481,7 +470,6 @@ function parseLine(line){
   if(pipe.length>1){ cn = pipe[0].trim(); example = pipe.slice(1).join(' | ').trim(); }
   return { word, ipa, cn, example };
 }
-
 function normalizeImportLine(ln){
   // CSV 支持：本行没有 / 但含逗号 → 视为 单词,音标,中文,例句
   const t = ln.trim();
@@ -496,7 +484,6 @@ function normalizeImportLine(ln){
   }
   return t;
 }
-
 function parseTextToCards(raw, startId, startSeq){
   const out=[]; let id=startId, seq=startSeq;
   raw.split(/\r?\n/).forEach(ln=>{
@@ -505,7 +492,6 @@ function parseTextToCards(raw, startId, startSeq){
   });
   return out;
 }
-
 function parseInput(){
   cards = parseTextToCards(document.getElementById('input').value, 0, 1);
   currentLibId = null;   // 新解析的是未保存的临时词库
@@ -516,7 +502,6 @@ function parseInput(){
   render();
   renderStats();
 }
-
 function appendParse(){
   const raw = document.getElementById('input').value;
   const startId = cards.length ? Math.max(...cards.map(c=>c.id))+1 : 0;
@@ -528,7 +513,6 @@ function appendParse(){
   render(); renderStats();
   alert('已追加 '+add.length+' 个单词（当前共 '+cards.length+' 个）');
 }
-
 function importWordsFile(ev){
   const file = ev.target.files && ev.target.files[0];
   if(!file){ return; }
@@ -555,9 +539,7 @@ function importWordsFile(ev){
   };
   reader.readAsText(file, 'utf-8');
 }
-
 function reparse(){ parseInput(); }
-
 function clearAll(){
   stopLead();
   endQuiz();
@@ -568,10 +550,8 @@ function clearAll(){
   render();
   renderStats();
 }
-
 /* ---------- 渲染 ---------- */
 function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-
 function render(){
   const box = document.getElementById('cards');
   const list = filteredCards();
@@ -587,7 +567,6 @@ function render(){
   }
   box.innerHTML = list.map(c=>cardHTML(c)).join('');
 }
-
 function filteredCards(){
   let list = cards;
   if(starFilter) list = list.filter(c=>c.star);
@@ -597,12 +576,10 @@ function filteredCards(){
   }
   return list;
 }
-
 function doSearch(){
   searchTerm = document.getElementById('searchBox').value.trim();
   render();
 }
-
 function toggleStarFilter(){
   starFilter = !starFilter;
   syncStarFilterBtn();
@@ -612,13 +589,11 @@ function syncStarFilterBtn(){
   const b = document.getElementById('starFilterBtn');
   if(b) b.classList.toggle('on-s', starFilter);
 }
-
 function dueText(c){
   if(c.lastCorrect==null) return {t:'未复习过', stale:true};
   const days = Math.floor((Date.now()-c.lastCorrect)/86400000);
   return {t:'上次答对 '+(days<=0?'今天':days+'天前'), stale:days>=3};
 }
-
 function cardHTML(c){
   const w = esc(c.word).replace(/'/g,"\\'");
   const badge = c.status==='mastered' ? '<span class="badge mastered">已掌握</span>'
@@ -648,10 +623,9 @@ function cardHTML(c){
       <button class="ghost ${c.star?'on-s':''}" onclick="toggleStar(${c.id})">⭐ 星标</button>
       <button class="ghost" onclick="editNote(${c.id})">📝 笔记</button>
     </div>
-    <audio id="audio-${c.id}" style="display:none"></audio>
+    <audio id="audio-${c.id}" style="display:none">
   </div>`;
 }
-
 function setMastery(id, status){
   const c = cards.find(x=>x.id===id); if(!c) return;
   c.status = (c.status===status) ? 'new' : status;
@@ -659,19 +633,16 @@ function setMastery(id, status){
   render();
   renderStats();
 }
-
 function toggleStar(id){
   const c = cards.find(x=>x.id===id); if(!c) return;
   c.star = !c.star; persistActive(); render(); renderStats();
 }
-
 function editNote(id){
   const c = cards.find(x=>x.id===id); if(!c) return;
   const v = prompt('为「'+c.word+'」添加/编辑笔记（发音要点、雅思搭配、例句等）：', c.note||'');
   if(v===null) return;
   c.note = v.trim(); persistActive(); render();
 }
-
 /* ---------- 翻面 / 随机 ---------- */
 function setFlip(mode){
   flipMode = mode;
@@ -681,13 +652,11 @@ function setFlip(mode){
     el.querySelectorAll('.reveal').forEach(x=>x.classList.remove('reveal'));
   });
 }
-
 function revealCard(id){
   const card = document.getElementById('card-'+id);
   if(!card) return;
   card.querySelectorAll('.word,.cn').forEach(x=>x.classList.toggle('reveal'));
 }
-
 /* ---------- 排序 ---------- */
 function setSort(mode){
   sortMode = mode;
@@ -701,10 +670,8 @@ function applySort(){
   else { for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];} }
 }
 function shuffleCards(){ setSort('rand'); }
-
 /* ---------- 录音 ---------- */
 const recState = {}; // id -> {recorder, chunks, url, stream}
-
 async function toggleRec(id){
   const st = recState[id];
   if(st && st.recorder && st.recorder.state==='recording'){
@@ -742,24 +709,19 @@ async function toggleRec(id){
     alert('无法获取麦克风权限：'+err.message);
   }
 }
-
 function playRec(id){
   const audio = document.getElementById('audio-'+id);
   if(audio && audio.src){ audio.currentTime=0; audio.play(); }
 }
-
 /* ---------- 自动领读 ---------- */
 let lead = { on:false, paused:false, idx:0, timer:null, gapMs:3000, repeat:1 };
-
 function setLeadBtn(){
   const b = document.getElementById('leadBtn');
   if(!lead.on){ b.innerHTML='▶ 自动领读'; b.className='warn'; }
   else if(lead.paused){ b.innerHTML='▶ 继续领读'; b.className='green'; }
   else { b.innerHTML='⏸ 暂停领读'; b.className='warn'; }
 }
-
 function leadStatus(msg){ document.getElementById('leadStatus').textContent = msg||''; }
-
 function highlight(idx){
   document.querySelectorAll('.card').forEach(el=>el.classList.remove('active'));
   if(idx>=0 && idx<cards.length){
@@ -767,7 +729,6 @@ function highlight(idx){
     if(el){ el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
   }
 }
-
 function toggleLead(){
   if(!cards.length){ alert('请先解析生成单词卡片'); return; }
   if(!lead.on){ lead.on=true; lead.paused=false; lead.idx=0; applyLeadHide(); setLeadBtn(); leadStep(); }
@@ -775,7 +736,6 @@ function toggleLead(){
     if(!lead.paused) leadStep(); else { speechSynthesis.cancel(); clearTimeout(lead.timer); clearTimeout(lead.fallback); }
   }
 }
-
 function applyLeadHide(){
   document.querySelectorAll('#cards .card').forEach(el=>{
     el.classList.remove('hide-cn','hide-ipa');
@@ -798,7 +758,6 @@ function toggleExLead(){
   settings.showExampleLead=!settings.showExampleLead; saveSettings();
   const b=document.getElementById('exLeadBtn'); if(b){ b.textContent='例句:'+(settings.showExampleLead?'开':'关'); b.classList.toggle('on', settings.showExampleLead); }
 }
-
 function stopLead(){
   lead.on=false; lead.paused=false; lead.idx=0;
   clearTimeout(lead.timer); clearTimeout(lead.fallback);
@@ -808,7 +767,6 @@ function stopLead(){
   leadStatus('');
   setLeadBtn();
 }
-
 function leadStep(){
   if(!lead.on || lead.paused) return;
   if(lead.idx >= cards.length){ leadStatus('领读完成 ✅'); stopLead(); return; }
@@ -838,7 +796,6 @@ function leadStep(){
   };
   playOne();
 }
-
 /* ---------- 本地历史词库 (localStorage) ---------- */
 const LIB_KEY = 'ielts_libs_v1';
 function genId(){ return 'L'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36); }
@@ -865,7 +822,6 @@ function getLibs(){
   return a;
 }
 function setLibs(a){ try{ localStorage.setItem(LIB_KEY, JSON.stringify(a)); }catch(e){ alert('保存失败：'+e.message); } }
-
 function persistActive(){
   if(currentLibId==null) return;
   const libs = getLibs();
@@ -875,7 +831,6 @@ function persistActive(){
   lib.count = cards.length;
   setLibs(libs);
 }
-
 function saveLib(){
   if(!cards.length){ alert('没有可保存的单词，请先「解析生成卡片」'); return; }
   const def = '词库 '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
@@ -890,7 +845,6 @@ function saveLib(){
   openSection('history'); renderLibs(); renderStats();
   alert('已保存：'+name);
 }
-
 function renderLibs(){
   const box = document.getElementById('libList');
   const libs = getLibs();
@@ -903,7 +857,6 @@ function renderLibs(){
     <button class="danger" onclick="delLib(${i})">删除</button>
   </div>`).join('');
 }
-
 function loadLib(i){
   const l = getLibs()[i]; if(!l) return;
   migrateLib(l);
@@ -919,14 +872,12 @@ function loadLib(i){
   render(); renderStats(); renderLibs();
   switchTab('read'); window.scrollTo({top:0,behavior:'smooth'});
 }
-
 function delLib(i){
   const libs = getLibs(); const l = libs[i]; if(!l) return;
   if(!confirm('删除词库「'+l.name+'」？不可恢复')) return;
   if(l.id===currentLibId) currentLibId=null;
   libs.splice(i,1); setLibs(libs); renderLibs(); renderStats();
 }
-
 /* 批量操作 */
 function toggleSelectAllLibs(){
   const boxes = document.querySelectorAll('#libList .chk');
@@ -955,7 +906,6 @@ function clearWrongBook(){
   cards.forEach(c=>c.wrong=false);
   persistActive(); render(); renderStats();
 }
-
 /* ---------- 词库导入 / 导出 JSON ---------- */
 function exportJSON(){
   const data = { app:'ielts-reader', version:2, exportedAt:new Date().toISOString(), libs:getLibs(), settings };
@@ -966,7 +916,6 @@ function exportJSON(){
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
-
 function importJSON(ev){
   const file = ev.target.files && ev.target.files[0];
   if(!file){ return; }
@@ -988,17 +937,14 @@ function importJSON(ev){
   };
   reader.readAsText(file);
 }
-
 /* ---------- 抽查练习 ---------- */
-let quiz = { mode:1, src:'all', items:[], idx:0, timerId:null, remain:0 };
+let quiz = { mode:1, src:'all', items:[], idx:0, timerId:null, remain:0, shuffle:1 };
 let sessionPractice = 0;
-
 const QUIZ_HINTS = {
   1:'模式·填单词：给音标 + 中文，单词随机挖空，输入完整单词',
   2:'模式·填音标：给单词 + 中文，音标留空，输入音标',
   3:'模式·听音默写：只播放发音，隐藏单词/音标/中文，听写拼出单词（雅思听力）'
 };
-
 function setQuizMode(m){
   quiz.mode = m;
   document.querySelectorAll('#quizModeSeg button').forEach(b=>{
@@ -1007,14 +953,18 @@ function setQuizMode(m){
   const h = document.getElementById('quizModeHint');
   if(h) h.textContent = QUIZ_HINTS[m]||'';
 }
-
 function setQuizSrc(s){
   quiz.src = s;
   document.querySelectorAll('#quizSrcSeg button').forEach(b=>{
     b.classList.toggle('on', b.dataset.s===s);
   });
 }
-
+function setQuizShuffle(v){
+  quiz.shuffle = Number(v);
+  document.querySelectorAll('#quizShuffleSeg button').forEach(b=>{
+    b.classList.toggle('on', +b.dataset.shuffle === quiz.shuffle);
+  });
+}
 function quizPool(){
   let pool = cards.slice();
   if(quiz.src==='review') pool = pool.filter(c=>c.status==='review');
@@ -1023,8 +973,10 @@ function quizPool(){
   if(quiz.mode===2) pool = pool.filter(c=>c.ipa);
   return pool;
 }
-
 function maskWord(word){
+  if((settings.maskLevel||0.4) === 0){
+    return word;
+  }
   const chars = word.split('');
   const letterIdx = [];
   chars.forEach((c,i)=>{ if(/[a-zA-Z]/.test(c)) letterIdx.push(i); });
@@ -1036,7 +988,6 @@ function maskWord(word){
   const blanked = new Set(sh.slice(0,n));
   return chars.map((c,i)=> blanked.has(i) ? '_' : c).join('');
 }
-
 /* 练习设置开关 */
 function setMask(v){ settings.maskLevel=v; saveSettings();
   document.querySelectorAll('#maskSeg button').forEach(b=>b.classList.toggle('on', +b.dataset.k===v)); }
@@ -1050,7 +1001,6 @@ function syncQuizOptBtns(){
   const eb=document.getElementById('exQuizBtn');
   if(eb){ eb.textContent='例句:'+(settings.showExampleQuiz?'开':'关'); eb.classList.toggle('on', settings.showExampleQuiz); }
 }
-
 function startQuiz(){
   if(!cards.length){ alert('请先在「跟读」页导入并解析单词'); return; }
   let pool = quizPool();
@@ -1062,288 +1012,4 @@ function startQuiz(){
               : '当前范围内没有可练习的单词';
     alert(why); return;
   }
-  if(quiz.src==='due'){
-    pool.sort((a,b)=>(a.lastCorrect||0)-(b.lastCorrect||0)); // 久未复习优先
-  } else {
-    for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
-  }
-  quiz.items = pool.map(c=>({ id:c.id, word:c.word, ipa:c.ipa, cn:c.cn, example:c.example||'',
-    masked: quiz.mode===1 ? maskWord(c.word) : '', userAns:'', result:null, skipped:false }));
-  quiz.idx = 0;
-  sessionPractice++;
-  if(currentLibId!=null){
-    const libs = getLibs(); const lib = libs.find(l=>l.id===currentLibId);
-    if(lib){ lib.practiceCount = (lib.practiceCount||0)+1; setLibs(libs); renderLibs(); }
-  }
-  renderStats();
-  document.getElementById('quizEmpty').classList.add('hidden');
-  document.getElementById('quizWrap').classList.remove('hidden');
-  renderQuiz();
-  document.getElementById('quizWrap').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function endQuiz(){
-  clearQuizTimer();
-  quiz.items=[]; quiz.idx=0;
-  const w = document.getElementById('quizWrap');
-  if(w){ w.classList.add('hidden'); w.innerHTML=''; }
-  const e = document.getElementById('quizEmpty');
-  if(e) e.classList.remove('hidden');
-}
-
-function quizStats(){
-  let ok=0,no=0,skip=0;
-  quiz.items.forEach(it=>{ if(it.result===true) ok++; else if(it.result===false) no++; else if(it.skipped) skip++; });
-  return {ok,no,skip,done:ok+no,total:quiz.items.length};
-}
-
-function renderQuiz(){
-  clearQuizTimer();
-  const it = quiz.items[quiz.idx]; if(!it) return;
-  const s = quizStats();
-  let promptHtml, mainHtml, placeholder;
-  if(quiz.mode===1){
-    promptHtml = `音标 <span class="quiz-ipa">${it.ipa?('/'+esc(it.ipa)+'/'):'（无）'}</span><br>中文：${esc(it.cn)||'（无）'}`;
-    mainHtml = `<div class="quiz-main"><span class="mask">${esc(it.masked)}</span></div>`;
-    placeholder = '输入完整单词';
-  } else if(quiz.mode===2){
-    promptHtml = `单词 <b>${esc(it.word)}</b><br>中文：${esc(it.cn)||'（无）'}`;
-    mainHtml = `<div class="quiz-main quiz-ipa">/ _ _ _ _ /</div>`;
-    placeholder = '输入音标（如 əˈbændən）';
-  } else {
-    promptHtml = `听发音，拼出单词 —— 隐藏单词/音标/中文`;
-    mainHtml = `<div class="quiz-main">🎧 🔊 🎧</div>`;
-    placeholder = '输入听到的单词';
-  }
-  let inputCls='', fb = '<div class="quiz-fb"></div>';
-  if(it.result===true){ fb = '<div class="quiz-fb ok">✓ 正确</div>'; inputCls='ok'; }
-  else if(it.result===false){
-    const ans = quiz.mode===2 ? ('/'+esc(it.ipa)+'/') : esc(it.word);
-    const extra = quiz.mode!==2 && it.ipa ? (' <span class="quiz-ipa">/'+esc(it.ipa)+'/</span>') : '';
-    const cnEx = quiz.mode===3 && it.cn ? ('<br><span style="color:var(--sub)">'+esc(it.cn)+'</span>') : '';
-    const ex = (settings.showExampleQuiz && it.example) ? ('<br><span style="color:var(--sub)">例句：'+esc(it.example)+'</span>') : '';
-    fb = `<div class="quiz-fb no">✗ 错误 · 正确答案：${ans}${extra}${cnEx}${ex}</div>`; inputCls='no';
-  }
-  const timerHtml = settings.quizTimer>0 ? `<div class="quiz-timer" id="quizTimer"></div>` : '';
-  const modeName = ['','填单词','填音标','听音默写'][quiz.mode];
-  document.getElementById('quizWrap').innerHTML = `
-    <div class="quiz-prompt">第 ${quiz.idx+1} / ${quiz.items.length} 题（${modeName}）<br>${promptHtml}</div>
-    ${mainHtml}
-    ${timerHtml}
-    <input class="quiz-input ${inputCls}" id="quizInput" placeholder="${placeholder}" value="${esc(it.userAns)}"
-       autocapitalize="off" autocorrect="off" spellcheck="false"
-       onkeydown="if(event.key==='Enter')checkQuiz()">
-    ${fb}
-    <div class="row" style="margin:4px 0 0;">
-      <button class="green" onclick="checkQuiz()">校验</button>
-      <button class="ghost" onclick="showQuizAns()">查看答案</button>
-      <button class="ghost" onclick="skipQuiz()">⏭ 跳过</button>
-      <button class="warn sm" onclick="speakQuiz()">🔊</button>
-    </div>
-    <div class="quiz-nav">
-      <button class="ghost" onclick="navQuiz(-1)">◀ 上一题</button>
-      <button class="ghost" onclick="navQuiz(1)">下一题 ▶</button>
-    </div>
-    <div class="row" style="margin:8px 0 0;">
-      <button class="ghost sm" onclick="showReport()">🏁 结束并查看报告</button>
-    </div>
-    <div class="quiz-stat">对 ${s.ok} · 错 ${s.no} · 跳过 ${s.skip} · 已答 ${s.done} / ${s.total}</div>`;
-  if(quiz.mode===3 && it.result===null && !settings.muteQuiz) setTimeout(()=>speak(it.word), 250);
-  if(settings.quizTimer>0 && it.result===null && !it.skipped) startQuizTimer();
-}
-
-function clearQuizTimer(){ if(quiz.timerId){ clearInterval(quiz.timerId); quiz.timerId=null; } }
-function startQuizTimer(){
-  quiz.remain = settings.quizTimer;
-  const paint = ()=>{ const el=document.getElementById('quizTimer'); if(el){ el.textContent='⏱ 剩余 '+quiz.remain+'s'; el.classList.toggle('urgent', quiz.remain<=5); } };
-  paint();
-  quiz.timerId = setInterval(()=>{ quiz.remain--; paint(); if(quiz.remain<=0){ clearQuizTimer(); onQuizTimeout(); } }, 1000);
-}
-function onQuizTimeout(){
-  const it = quiz.items[quiz.idx]; if(!it) return;
-  if(it.result===null){ it.result=false; applyQuizResult(it); }
-  renderQuiz();
-}
-function skipQuiz(){
-  clearQuizTimer();
-  const it = quiz.items[quiz.idx]; if(!it) return;
-  it.skipped = true; it.result = null;
-  if(quiz.idx < quiz.items.length-1){ quiz.idx++; renderQuiz(); }
-  else showReport();
-}
-
-function saveQuizInput(){
-  const inp = document.getElementById('quizInput');
-  if(inp && quiz.items[quiz.idx]) quiz.items[quiz.idx].userAns = inp.value;
-}
-
-function normIpa(s){ return (s||'').replace(/[\s\/]/g,'').toLowerCase(); }
-
-function checkQuiz(){
-  clearQuizTimer();
-  const it = quiz.items[quiz.idx]; if(!it) return;
-  const val = document.getElementById('quizInput').value.trim();
-  it.userAns = val;
-  if(!val){ alert('请先输入答案'); return; }
-  it.skipped = false;
-  it.result = quiz.mode===2 ? (normIpa(val)===normIpa(it.ipa))
-                            : (val.toLowerCase()===it.word.toLowerCase());
-  applyQuizResult(it);
-  renderQuiz();
-}
-
-function applyQuizResult(it){
-  const c = cards.find(x=>x.id===it.id);
-  if(!c) return;
-  if(it.result===false) c.wrong = true;                  // 答错自动进错题本
-  else if(it.result===true){
-    if(c.wrong) c.wrong = false;                         // 答对移出错题本
-    c.lastCorrect = Date.now();                          // 记录复习时间（艾宾浩斯）
-  }
-  persistActive();
-  renderStats();
-}
-
-function showQuizAns(){
-  clearQuizTimer();
-  const it = quiz.items[quiz.idx]; if(!it) return;
-  if(it.result===null){ it.result = false; applyQuizResult(it); } // 看答案记为未掌握并收入错题
-  renderQuiz();
-}
-
-function speakQuiz(){ const it=quiz.items[quiz.idx]; if(it) speak(it.word); }
-
-function navQuiz(d){
-  clearQuizTimer();
-  saveQuizInput();
-  const ni = quiz.idx + d;
-  if(ni<0){ alert('已经是第一题'); return; }
-  if(ni>=quiz.items.length){ showReport(); return; }
-  quiz.idx = ni; renderQuiz();
-}
-
-function showReport(){
-  clearQuizTimer();
-  const s = quizStats();
-  const wrongItems = quiz.items.filter(it=>it.result===false);
-  const rate = s.total ? Math.round(s.ok/s.total*100) : 0;
-  const listHtml = wrongItems.length ? wrongItems.map(it=>`<div class="ritem">
-      <span class="rw">${esc(it.word)}</span>${it.ipa?` <span class="ri">/${esc(it.ipa)}/</span>`:''}<span class="rc"> ${esc(it.cn)||''}</span>
-    </div>`).join('') : '<div class="ritem rc">本轮没有错题，太棒了 🎉</div>';
-  document.getElementById('quizWrap').innerHTML = `<div class="report">
-    <h3>🏁 本轮练习报告</h3>
-    <div class="big">
-      <div class="stat-chip"><div class="n">${s.total}</div><div class="l">总题</div></div>
-      <div class="stat-chip"><div class="n">${s.ok}</div><div class="l">答对</div></div>
-      <div class="stat-chip"><div class="n">${s.no}</div><div class="l">答错</div></div>
-      <div class="stat-chip"><div class="n">${s.skip}</div><div class="l">跳过</div></div>
-      <div class="stat-chip"><div class="n">${rate}%</div><div class="l">正确率</div></div>
-    </div>
-    <div class="sec-sub" style="margin:4px 0 6px;">错题清单（${wrongItems.length}）</div>
-    <div class="rlist">${listHtml}</div>
-    <div class="row" style="margin:10px 0 0;">
-      <button class="green" onclick="exportReport()">📤 导出错题文本</button>
-      <button class="warn" onclick="startQuiz()">🔁 再来一轮</button>
-      <button class="ghost" onclick="endQuiz()">退出</button>
-    </div>
-  </div>`;
-  document.getElementById('quizWrap').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function exportReport(){
-  const s = quizStats();
-  const wrongItems = quiz.items.filter(it=>it.result===false);
-  let txt = '雅思单词练习报告\n时间：'+new Date().toLocaleString('zh-CN')+'\n';
-  txt += '总题 '+s.total+' · 对 '+s.ok+' · 错 '+s.no+' · 跳过 '+s.skip+' · 正确率 '+(s.total?Math.round(s.ok/s.total*100):0)+'%\n\n【错题清单】\n';
-  txt += wrongItems.length ? wrongItems.map(it=> it.word+(it.ipa?(' /'+it.ipa+'/'):'')+(it.cn?('  '+it.cn):'')+(it.example?('  例句：'+it.example):'')).join('\n') : '（无错题）';
-  const blob = new Blob([txt],{type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='错题报告-'+new Date().toISOString().slice(0,10)+'.txt';
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>{},()=>{}); }
-}
-
-/* ---------- 界面：Tab 切换 & 折叠 ---------- */
-function switchTab(name){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.remove('on'));
-  document.getElementById('view-'+name).classList.add('active');
-  document.getElementById('tab-'+name).classList.add('on');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function openSection(name){
-  document.getElementById('body-'+name).classList.remove('hidden');
-  document.getElementById('head-'+name).classList.add('open');
-  if(name==='history') renderLibs();
-}
-
-function toggleSection(name){
-  const body = document.getElementById('body-'+name);
-  const head = document.getElementById('head-'+name);
-  const willOpen = body.classList.contains('hidden');
-  body.classList.toggle('hidden');
-  head.classList.toggle('open', willOpen);
-  if(willOpen && name==='history') renderLibs();
-}
-
-/* ---------- 学习统计 ---------- */
-function renderStats(){
-  const box = document.getElementById('statsBox');
-  const libName = document.getElementById('statsLib');
-  if(!box) return;
-  const total = cards.length;
-  const mastered = cards.filter(c=>c.status==='mastered').length;
-  const review = cards.filter(c=>c.status==='review').length;
-  const wrong = cards.filter(c=>c.wrong).length;
-  let practice = sessionPractice;
-  if(currentLibId!=null){
-    const lib = getLibs().find(l=>l.id===currentLibId);
-    if(lib){ practice = lib.practiceCount||0; libName.textContent='已加载：'+lib.name; }
-  } else {
-    libName.textContent = total ? '临时词库（未保存 · 标记不持久）' : '未加载词库';
-  }
-  box.innerHTML = [['总词数',total],['已掌握',mastered],['待复习',review],['错题',wrong],['练习',practice]]
-    .map(a=>`<div class="stat-chip"><div class="n">${a[1]}</div><div class="l">${a[0]}</div></div>`).join('');
-}
-
-/* ---------- 初始化 ---------- */
-function syncSeg(id, key, val){
-  document.querySelectorAll('#'+id+' button').forEach(b=>b.classList.toggle('on', b.dataset[key]===String(val)));
-}
-function initUI(){
-  loadSettings();
-  applyDark();
-  applyFont();
-  rate = settings.rate || 0.9;
-  lead.gapMs = settings.gapMs || 3000;
-  lead.repeat = settings.repeat || 1;
-  const rEl=document.getElementById('rate'); if(rEl) rEl.value=rate;
-  document.getElementById('rateVal').textContent = rate.toFixed(1)+'x';
-  const gEl=document.getElementById('gap'); if(gEl) gEl.value=(lead.gapMs/1000);
-  document.getElementById('gapVal').textContent = (lead.gapMs/1000).toFixed(1)+'s';
-  const rpEl=document.getElementById('repeat'); if(rpEl) rpEl.value=lead.repeat;
-  document.getElementById('repeatVal').textContent = lead.repeat+'次';
-  // 同步各 seg 选中态
-  syncSeg('fontSeg','f',settings.fontScale);
-  syncSeg('maskSeg','k',settings.maskLevel);
-  syncSeg('timerSeg','t',settings.quizTimer);
-  syncSeg('leadHideSeg','h',settings.leadHide);
-  syncSeg('sortSeg','o',sortMode);
-  // 同步开关按钮文字
-  const el=document.getElementById('exLeadBtn'); if(el){ el.textContent='例句:'+(settings.showExampleLead?'开':'关'); el.classList.toggle('on', settings.showExampleLead); }
-  syncQuizOptBtns();
-  setQuizMode(1);
-  renderLibs();
-  renderStats();
-}
-initUI();
-</script>
-</body>
-</html>
-
-
-
-
-
+  if(quiz.src==='due'
