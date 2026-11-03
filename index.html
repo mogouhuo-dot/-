@@ -64,9 +64,6 @@
   .recording .rec-dot{animation:blink .8s infinite;}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
   .empty{text-align:center;color:var(--sub);padding:40px 10px;font-size:14px;line-height:1.7;}
-  .footer{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);
-    border-top:1px solid var(--line);padding:8px 12px;backdrop-filter:blur(6px);}
-  .footer .inner{max-width:720px;margin:0 auto;display:flex;gap:8px;}
   details summary{cursor:pointer;font-size:13px;color:var(--accent);padding:4px 0;}
   pre.ex{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;
     font-size:12px;overflow:auto;white-space:pre-wrap;color:var(--sub);}
@@ -97,17 +94,14 @@
   .quiz-fb.no{color:var(--danger);}
   .quiz-nav{display:flex;gap:8px;margin-top:8px;}
   .quiz-stat{font-size:14px;color:var(--text);text-align:center;margin-top:10px;font-weight:600;}
-  /* 分区标题 + 折叠 */
   .sec-head{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
   .sec-head .sec-title{flex:1;margin-bottom:0;}
   .sec-head .chev{font-size:13px;color:var(--sub);transition:transform .2s;}
   .sec-head.open .chev{transform:rotate(180deg);}
   .sec-body{margin-top:12px;}
   .sec-sub{font-size:12px;color:var(--sub);font-weight:400;margin-left:2px;}
-  /* 顶部视图切换 */
   .view{display:none;}
   .view.active{display:block;}
-  /* 底部 Tab 栏 */
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;gap:6px;
     background:var(--bar);border-top:1px solid var(--line);
     padding:8px 10px;backdrop-filter:blur(8px);max-width:720px;margin:0 auto;}
@@ -116,21 +110,17 @@
     align-items:center;justify-content:center;gap:2px;line-height:1.1;padding:6px;}
   .tabbar button .ico{font-size:19px;}
   .tabbar button.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
-  /* 顶栏 + 暗色按钮 */
   .topbar{display:flex;align-items:center;justify-content:center;position:relative;}
   .darkbtn{position:absolute;right:0;top:0;min-height:0;flex:none;min-width:0;width:40px;height:40px;
     padding:0;border-radius:12px;background:var(--card);color:var(--text);border:1px solid var(--line);font-size:18px;}
-  /* 统计 chips */
   .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
   .stat-chip{flex:1 1 30%;min-width:84px;background:var(--bg);border:1px solid var(--line);
     border-radius:12px;padding:8px 6px;text-align:center;}
   .stat-chip .n{font-size:20px;font-weight:700;color:var(--accent);}
   .stat-chip .l{font-size:11px;color:var(--sub);margin-top:2px;}
-  /* 搜索 */
   .search{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 14px;
     font-size:15px;outline:none;background:var(--card);color:var(--text);}
   .search:focus{border-color:var(--accent);}
-  /* 掌握标记 badge + 按钮 */
   .badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;margin-left:8px;vertical-align:middle;}
   .badge.mastered{background:rgba(39,174,143,.15);color:var(--accent2);}
   .badge.review{background:rgba(232,145,58,.18);color:var(--warn);}
@@ -140,11 +130,9 @@
   .card .marks button{flex:1 1 44%;min-height:40px;padding:8px;font-size:13px;}
   .card .marks button.on-m{background:var(--accent2);color:#fff;border-color:var(--accent2);}
   .card .marks button.on-r{background:var(--warn);color:#fff;border-color:var(--warn);}
-  /* 领读参数行 */
   .param{display:flex;align-items:center;gap:10px;margin-top:10px;}
   .param label{font-size:13px;color:var(--sub);white-space:nowrap;min-width:78px;}
   .param .val{font-size:13px;color:var(--text);width:48px;text-align:right;font-weight:600;}
-  /* 星标 / 笔记 / 例句 / 复习提示 */
   .badge.star{background:rgba(240,190,40,.2);color:#d9a400;}
   .card.is-star{border-color:#f0be28;}
   button.on-s{background:#f0be28;color:#fff;border-color:#f0be28;}
@@ -155,14 +143,11 @@
   .card .ex-detail .ex-text{margin-top:6px;color:var(--text);background:var(--bg);border-radius:10px;padding:8px 10px;}
   .card .due{font-size:12px;color:var(--sub);margin-top:6px;}
   .card .due.stale{color:var(--warn);font-weight:600;}
-  /* 选项行（开关 seg） */
   .opt-row{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
   .opt-row .lbl{font-size:13px;color:var(--sub);min-width:78px;}
   .opt-row .seg{flex:1;}
   .opt-row .seg button{min-height:40px;font-size:13px;padding:6px;}
-  /* 词库多选 */
   .lib-item .chk{width:22px;height:22px;flex:none;accent-color:var(--accent);}
-  /* 练习报告 */
   .report h3{font-size:17px;margin:0 0 10px;}
   .report .big{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
   .report .rlist{max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px;}
@@ -182,7 +167,6 @@
   </div>
   <div class="hint">全部本地运行 · 不上传任何数据</div>
 </header>
-<!-- ================= 跟读视图 ================= -->
 <div class="view active" id="view-read">
   <div class="panel">
     <div class="sec-head open" id="head-import" onclick="toggleSection('import')">
@@ -318,7 +302,6 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
     <div class="empty">展开上方「词库导入」粘贴单词并解析，即可生成卡片 👆</div>
   </div>
 </div>
-<!-- ================= 练习视图 ================= -->
 <div class="view" id="view-quiz">
   <div class="panel">
     <div class="sec-title">✍️ 抽查练习</div>
@@ -375,34 +358,32 @@ abandon,əˈbændən,抛弃；放弃,They abandoned the plan.</pre>
   <div id="quizWrap" class="quiz-wrap hidden"></div>
   <div class="empty" id="quizEmpty">点击「开始抽查」，从当前词库随机出题</div>
 </div>
-<!-- ================= 底部切换 ================= -->
 <nav class="tabbar">
   <button class="on" id="tab-read" onclick="switchTab('read')"><span class="ico">📖</span>跟读</button>
   <button id="tab-quiz" onclick="switchTab('quiz')"><span class="ico">✍️</span>练习</button>
 </nav>
 <script>
-/* ---------- 状态 ---------- */
-let cards = [];           // {id, word, ipa, cn, status:'new'|'mastered'|'review', wrong:bool}
-let flipMode = 'none';    // none | hide-cn | hide-word
+let cards = [];
+let flipMode = 'none';
 let rate = 0.9;
 let gbVoice = null;
-let currentLibId = null;  // 当前卡片所属已保存词库 id（null = 未保存）
+let currentLibId = null;
 let searchTerm = '';
-let sortMode = 'seq';     // seq | rev | rand
+let sortMode = 'seq';
 let starFilter = false;
-/* ---------- 设置 (localStorage) ---------- */
+
 const SET_KEY = 'ielts_settings_v1';
 let settings = { dark:false, rate:0.9, gapMs:3000, repeat:1,
   maskLevel:0.4, fontScale:1, leadHide:'none',
   showExampleLead:false, showExampleQuiz:false, quizTimer:0, muteQuiz:false };
+
 function loadSettings(){
   try{ Object.assign(settings, JSON.parse(localStorage.getItem(SET_KEY))||{}); }catch(e){}
 }
 function saveSettings(){ try{ localStorage.setItem(SET_KEY, JSON.stringify(settings)); }catch(e){} }
 function toggleDark(){
   settings.dark = !settings.dark;
-  applyDark();
-  saveSettings();
+  applyDark(); saveSettings();
 }
 function applyDark(){
   document.body.classList.toggle('dark', !!settings.dark);
@@ -411,14 +392,14 @@ function applyDark(){
 }
 function setFont(v){
   settings.fontScale=v; saveSettings(); applyFont();
-  document.querySelectorAll('#fontSeg button').forEach(b=>b.classList.toggle('on', +b.dataset.f===v));
+  document.querySelectorAll('#fontSeg button').forEach(bt=>bt.classList.toggle('on', +bt.dataset.f===v));
 }
 function applyFont(){ document.documentElement.style.setProperty('--fs', settings.fontScale||1); }
-/* ---------- TTS 语音准备 ---------- */
+
 function pickVoice(){
   const vs = speechSynthesis.getVoices();
-  gbVoice = vs.find(v=> /Daniel|Samantha/i.test(v.name) && v.lang === 'en‑GB')
-         || vs.find(v=>v.lang==='en‑GB')
+  gbVoice = vs.find(v=> /Daniel|Samantha/i.test(v.name) && v.lang === 'en-GB')
+         || vs.find(v=>v.lang==='en-GB')
          || vs.find(v=>/en[-_]GB/i.test(v.lang))
          || vs.find(v=>v.lang && v.lang.toLowerCase().startsWith('en'))
          || null;
@@ -454,7 +435,7 @@ function updateRepeat(){
   document.getElementById('repeatVal').textContent = v+'次';
   settings.repeat = v; saveSettings();
 }
-/* ---------- 解析 ---------- */
+
 function parseLine(line){
   line = line.trim();
   if(!line) return null;
@@ -471,7 +452,6 @@ function parseLine(line){
   return { word, ipa, cn, example };
 }
 function normalizeImportLine(ln){
-  // CSV 支持：本行没有 / 但含逗号 → 视为 单词,音标,中文,例句
   const t = ln.trim();
   if(!t) return t;
   if(t.indexOf('/')===-1 && t.indexOf(',')>-1){
@@ -494,13 +474,12 @@ function parseTextToCards(raw, startId, startSeq){
 }
 function parseInput(){
   cards = parseTextToCards(document.getElementById('input').value, 0, 1);
-  currentLibId = null;   // 新解析的是未保存的临时词库
+  currentLibId = null;
   searchTerm = ''; starFilter = false; sortMode = 'seq';
   const sb = document.getElementById('searchBox'); if(sb) sb.value='';
   syncStarFilterBtn();
   document.querySelectorAll('#sortSeg button').forEach(b=>b.classList.toggle('on', b.dataset.o==='seq'));
-  render();
-  renderStats();
+  render(); renderStats();
 }
 function appendParse(){
   const raw = document.getElementById('input').value;
@@ -509,8 +488,7 @@ function appendParse(){
   const add = parseTextToCards(raw, startId, startSeq);
   if(!add.length){ alert('没有解析到可追加的单词'); return; }
   cards = cards.concat(add);
-  persistActive();   // 若当前是已保存词库，写回保存
-  render(); renderStats();
+  persistActive(); render(); renderStats();
   alert('已追加 '+add.length+' 个单词（当前共 '+cards.length+' 个）');
 }
 function importWordsFile(ev){
@@ -522,8 +500,8 @@ function importWordsFile(ev){
     const ta = document.getElementById('input');
     const doAppend = cards.length ? confirm('已有 '+cards.length+' 个单词。\n点「确定」= 追加到当前词库\n点「取消」= 替换为文件内容') : false;
     if(doAppend){
-      const startId = Math.max(...cards.map(c=>c.id))+1;
-      const startSeq = Math.max(...cards.map(c=>c.seq))+1;
+      const startId = cards.length ? Math.max(...cards.map(c=>c.id))+1 : 0;
+      const startSeq = cards.length ? Math.max(...cards.map(c=>c.seq))+1 : 1;
       const add = parseTextToCards(text, startId, startSeq);
       if(!add.length){ alert('文件里没有解析到单词'); ev.target.value=''; return; }
       ta.value = (ta.value.trim()? ta.value.trim()+'\n':'') + text;
@@ -541,16 +519,13 @@ function importWordsFile(ev){
 }
 function reparse(){ parseInput(); }
 function clearAll(){
-  stopLead();
-  endQuiz();
-  cards = [];
-  currentLibId = null;
+  stopLead(); endQuiz();
+  cards = []; currentLibId = null;
   document.getElementById('input').value = '';
   const sb = document.getElementById('searchBox'); if(sb) sb.value=''; searchTerm='';
-  render();
-  renderStats();
+  render(); renderStats();
 }
-/* ---------- 渲染 ---------- */
+
 function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function render(){
   const box = document.getElementById('cards');
@@ -582,8 +557,7 @@ function doSearch(){
 }
 function toggleStarFilter(){
   starFilter = !starFilter;
-  syncStarFilterBtn();
-  render();
+  syncStarFilterBtn(); render();
 }
 function syncStarFilterBtn(){
   const b = document.getElementById('starFilterBtn');
@@ -608,8 +582,7 @@ function cardHTML(c){
     <div class="word" onclick="speak('${w}')">${esc(c.word)}${badge}${wrongBadge}${starBadge}</div>
     ${c.ipa?`<div class="ipa">/${esc(c.ipa)}/</div>`:''}
     <div class="cn">${esc(c.cn)||'（无释义）'}</div>
-    ${exHtml}
-    ${noteHtml}
+    ${exHtml}${noteHtml}
     <div class="due ${d.stale?'stale':''}">${d.t}</div>
     <div class="acts">
       <button class="green" onclick="speak('${w}')">🔊 发音</button>
@@ -629,9 +602,7 @@ function cardHTML(c){
 function setMastery(id, status){
   const c = cards.find(x=>x.id===id); if(!c) return;
   c.status = (c.status===status) ? 'new' : status;
-  persistActive();
-  render();
-  renderStats();
+  persistActive(); render(); renderStats();
 }
 function toggleStar(id){
   const c = cards.find(x=>x.id===id); if(!c) return;
@@ -639,11 +610,11 @@ function toggleStar(id){
 }
 function editNote(id){
   const c = cards.find(x=>x.id===id); if(!c) return;
-  const v = prompt('为「'+c.word+'」添加/编辑笔记（发音要点、雅思搭配、例句等）：', c.note||'');
+  const v = prompt('为「'+c.word+'」添加/编辑笔记：', c.note||'');
   if(v===null) return;
   c.note = v.trim(); persistActive(); render();
 }
-/* ---------- 翻面 / 随机 ---------- */
+
 function setFlip(mode){
   flipMode = mode;
   document.querySelectorAll('.card').forEach(el=>{
@@ -657,63 +628,47 @@ function revealCard(id){
   if(!card) return;
   card.querySelectorAll('.word,.cn').forEach(x=>x.classList.toggle('reveal'));
 }
-/* ---------- 排序 ---------- */
 function setSort(mode){
   sortMode = mode;
   document.querySelectorAll('#sortSeg button').forEach(b=>b.classList.toggle('on', b.dataset.o===mode));
-  applySort();
-  render();
+  applySort(); render();
 }
 function applySort(){
   if(sortMode==='seq') cards.sort((a,b)=>a.seq-b.seq);
   else if(sortMode==='rev') cards.sort((a,b)=>b.seq-a.seq);
   else { for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];} }
 }
-function shuffleCards(){ setSort('rand'); }
-/* ---------- 录音 ---------- */
-const recState = {}; // id -> {recorder, chunks, url, stream}
+
+const recState = {};
 async function toggleRec(id){
   const st = recState[id];
-  if(st && st.recorder && st.recorder.state==='recording'){
-    st.recorder.stop();
-    return;
-  }
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    alert('当前浏览器不支持录音'); return;
-  }
+  if(st && st.recorder && st.recorder.state==='recording'){ st.recorder.stop(); return; }
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ alert('浏览器不支持录音'); return; }
   try{
     const stream = await navigator.mediaDevices.getUserMedia({audio:true});
     const rec = new MediaRecorder(stream);
     const chunks = [];
     rec.ondataavailable = e=>{ if(e.data.size>0) chunks.push(e.data); };
     rec.onstop = ()=>{
-      const blob = new Blob(chunks,{type: rec.mimeType||'audio/webm'});
+      const blob = new Blob(chunks,{type:'audio/webm'});
       const url = URL.createObjectURL(blob);
-      const old = recState[id];
-      if(old && old.url) URL.revokeObjectURL(old.url);
-      recState[id] = {url, stream:null};
-      const audio = document.getElementById('audio-'+id);
-      audio.src = url;
-      document.getElementById('playBtn-'+id).disabled = false;
-      const btn = document.getElementById('recBtn-'+id);
-      btn.classList.remove('recording');
-      btn.innerHTML = '🎙 重录';
+      if(st&&st.url) URL.revokeObjectURL(st.url);
+      recState[id]={url,stream:null};
+      const audio = document.getElementById('audio-'+id); audio.src=url;
+      document.getElementById('playBtn-'+id).disabled=false;
+      const btn=document.getElementById('recBtn-'+id); btn.classList.remove('recording'); btn.innerHTML='🎙 重录';
       stream.getTracks().forEach(t=>t.stop());
     };
-    recState[id] = {recorder:rec, chunks, stream, url:(st&&st.url)||null};
+    recState[id]={recorder:rec,chunks,stream,url:st?.url||null};
     rec.start();
-    const btn = document.getElementById('recBtn-'+id);
-    btn.classList.add('recording');
-    btn.innerHTML = '<span class="rec-dot"></span>停止';
-  }catch(err){
-    alert('无法获取麦克风权限：'+err.message);
-  }
+    const btn=document.getElementById('recBtn-'+id); btn.classList.add('recording'); btn.innerHTML='<span class="rec-dot"></span>停止';
+  }catch(err){ alert('麦克风权限失败：'+err.message); }
 }
 function playRec(id){
   const audio = document.getElementById('audio-'+id);
-  if(audio && audio.src){ audio.currentTime=0; audio.play(); }
+  if(audio&&audio.src){ audio.currentTime=0; audio.play(); }
 }
-/* ---------- 自动领读 ---------- */
+
 let lead = { on:false, paused:false, idx:0, timer:null, gapMs:3000, repeat:1 };
 function setLeadBtn(){
   const b = document.getElementById('leadBtn');
@@ -724,7 +679,7 @@ function setLeadBtn(){
 function leadStatus(msg){ document.getElementById('leadStatus').textContent = msg||''; }
 function highlight(idx){
   document.querySelectorAll('.card').forEach(el=>el.classList.remove('active'));
-  if(idx>=0 && idx<cards.length){
+  if(idx>=0&&idx<cards.length){
     const el = document.getElementById('card-'+cards[idx].id);
     if(el){ el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
   }
@@ -746,7 +701,6 @@ function applyLeadHide(){
 function clearLeadHide(){
   if(settings.leadHide==='none') return;
   document.querySelectorAll('#cards .card').forEach(el=>el.classList.remove('hide-cn','hide-ipa'));
-  // 恢复用户用翻面按钮选择的 flipMode
   if(flipMode!=='none') document.querySelectorAll('#cards .card').forEach(el=>el.classList.add(flipMode));
 }
 function setLeadHide(h){
@@ -764,8 +718,7 @@ function stopLead(){
   if('speechSynthesis' in window) speechSynthesis.cancel();
   clearLeadHide();
   document.querySelectorAll('.card').forEach(el=>el.classList.remove('active'));
-  leadStatus('');
-  setLeadBtn();
+  leadStatus(''); setLeadBtn();
 }
 function leadStep(){
   if(!lead.on || lead.paused) return;
@@ -777,79 +730,71 @@ function leadStep(){
   leadStatus('领读中 '+(lead.idx+1)+' / '+cards.length+'：'+c.word+(rep>1?(' ×'+rep):'')+'（停 '+(lead.gapMs/1000)+'s 跟读）'+exLine);
   let played = 0, fired = false;
   const gap = ()=>{
-    if(fired) return; fired = true;
-    clearTimeout(lead.fallback);
-    if(!lead.on || lead.paused) return;
+    if(fired) return; fired=true; clearTimeout(lead.fallback);
+    if(!lead.on||lead.paused) return;
     lead.timer = setTimeout(()=>{ lead.idx++; leadStep(); }, lead.gapMs);
   };
   const playOne = ()=>{
-    if(!lead.on || lead.paused) return;
-    const u = speak(c.word);
-    played++;
+    if(!lead.on||lead.paused) return;
+    const u = speak(c.word); played++;
     if(played < rep){
-      const next = ()=> setTimeout(playOne, 300);
-      if(u){ u.onend = next; } else setTimeout(next, 900);
-    } else {
-      if(u){ u.onend = gap; lead.fallback = setTimeout(gap, 5000); }
-      else gap();
+      const next = ()=> setTimeout(playOne,300);
+      if(u){ u.onend=next; } else setTimeout(next,900);
+    }else{
+      if(u){ u.onend=gap; lead.fallback=setTimeout(gap,5000); } else gap();
     }
   };
   playOne();
 }
-/* ---------- 本地历史词库 (localStorage) ---------- */
+
 const LIB_KEY = 'ielts_libs_v1';
 function genId(){ return 'L'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36); }
 function migrateLib(lib){
   if(lib.words==null){
-    const words = [];
+    const words=[];
     (lib.text||'').split(/\r?\n/).forEach(ln=>{
-      const r = parseLine(ln);
-      if(r && r.word) words.push({word:r.word, ipa:r.ipa, cn:r.cn, example:r.example||'', status:'new', wrong:false, star:false, note:'', lastCorrect:null});
+      const r=parseLine(ln);
+      if(r&&r.word) words.push({word:r.word,ipa:r.ipa,cn:r.cn,example:r.example||'',status:'new',wrong:false,star:false,note:'',lastCorrect:null});
     });
-    lib.words = words;
+    lib.words=words;
   }
-  if(lib.id==null) lib.id = genId();
-  if(lib.practiceCount==null) lib.practiceCount = 0;
-  if(lib.count==null) lib.count = lib.words.length;
+  if(lib.id==null) lib.id=genId();
+  if(lib.practiceCount==null) lib.practiceCount=0;
+  if(lib.count==null) lib.count=lib.words.length;
   return lib;
 }
 function getLibs(){
-  let a;
-  try{ a = JSON.parse(localStorage.getItem(LIB_KEY))||[]; }catch(e){ a=[]; }
+  let a; try{a=JSON.parse(localStorage.getItem(LIB_KEY))||[];}catch(e){a=[];}
   let changed=false;
-  a.forEach(l=>{ const had = l.words!=null && l.id!=null && l.practiceCount!=null; migrateLib(l); if(!had) changed=true; });
-  if(changed){ try{ localStorage.setItem(LIB_KEY, JSON.stringify(a)); }catch(e){} }
+  a.forEach(l=>{const had=l.words!=null&&l.id!=null&&l.practiceCount!=null; migrateLib(l); if(!had) changed=true;});
+  if(changed){try{localStorage.setItem(LIB_KEY,JSON.stringify(a));}catch(e){}}
   return a;
 }
-function setLibs(a){ try{ localStorage.setItem(LIB_KEY, JSON.stringify(a)); }catch(e){ alert('保存失败：'+e.message); } }
+function setLibs(a){ try{localStorage.setItem(LIB_KEY,JSON.stringify(a));}catch(e){alert('保存失败：'+e.message);} }
 function persistActive(){
   if(currentLibId==null) return;
-  const libs = getLibs();
-  const lib = libs.find(l=>l.id===currentLibId);
-  if(!lib) return;
-  lib.words = cards.map(c=>({word:c.word, ipa:c.ipa, cn:c.cn, example:c.example||'', status:c.status, wrong:c.wrong, star:!!c.star, note:c.note||'', lastCorrect:c.lastCorrect||null}));
-  lib.count = cards.length;
-  setLibs(libs);
+  const libs=getLibs();
+  const lib=libs.find(l=>l.id===currentLibId); if(!lib) return;
+  lib.words = cards.map(c=>({word:c.word,ipa:c.ipa,cn:c.cn,example:c.example||'',status:c.status,wrong:c.wrong,star:!!c.star,note:c.note||'',lastCorrect:c.lastCorrect||null}));
+  lib.count = cards.length; setLibs(libs);
 }
 function saveLib(){
-  if(!cards.length){ alert('没有可保存的单词，请先「解析生成卡片」'); return; }
-  const def = '词库 '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
-  const name = (prompt('给这套词库起个名字：', def)||'').trim();
+  if(!cards.length){alert('没有可保存的单词，请先「解析生成卡片」');return;}
+  const def='词库 '+new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+  const name=(prompt('给这套词库起个名字：',def)||'').trim();
   if(!name) return;
-  const words = cards.map(c=>({word:c.word, ipa:c.ipa, cn:c.cn, example:c.example||'', status:c.status, wrong:c.wrong, star:!!c.star, note:c.note||'', lastCorrect:c.lastCorrect||null}));
-  const libs = getLibs();
-  const id = genId();
-  libs.unshift({id, name, ts:Date.now(), count:words.length, words, practiceCount:(sessionPractice||0)});
-  setLibs(libs);
-  currentLibId = id;
-  openSection('history'); renderLibs(); renderStats();
+  const words = cards.map(c=>({word:c.word,ipa:c.ipa,cn:c.cn,example:c.example||'',status:c.status,wrong:c.wrong,star:!!c.star,note:c.note||'',lastCorrect:c.lastCorrect||null}));
+  const libs=getLibs();
+  const id=genId();
+  libs.unshift({id,name,ts:Date.now(),count:words.length,words,practiceCount:(sessionPractice||0)});
+  setLibs(libs); currentLibId=id; openSection('history'); renderLibs(); renderStats();
   alert('已保存：'+name);
 }
 function renderLibs(){
-  const box = document.getElementById('libList');
-  const libs = getLibs();
-  if(!libs.length){ box.innerHTML = '<div class="hint" style="margin:6px 0;text-align:left;">还没有保存的词库，点上方「保存当前词库」</div>'; return; }
-  box.innerHTML = libs.map((l,i)=>`<div class="lib-item">
+  const box=document.getElementById('libList');
+  const libs=getLibs();
+  if(!libs.length){ box.innerHTML='<div class="hint" style="margin:6px 0;text-align:left;">还没有保存的词库，点上方「保存当前词库」</div>'; return; }
+  box.innerHTML=libs.map((l,i)=>`<div class="lib-item">
     <input type="checkbox" class="chk" data-i="${i}">
     <div class="meta"><div class="nm">${esc(l.name)}${l.id===currentLibId?' <span class="badge mastered">当前</span>':''}</div>
     <div class="sub">${l.count} 词 · 练习 ${l.practiceCount||0} 次 · ${new Date(l.ts).toLocaleDateString('zh-CN')}</div></div>
@@ -858,86 +803,76 @@ function renderLibs(){
   </div>`).join('');
 }
 function loadLib(i){
-  const l = getLibs()[i]; if(!l) return;
+  const l=getLibs()[i]; if(!l) return;
   migrateLib(l);
-  cards = l.words.map((w,idx)=>({id:idx, seq:idx+1, word:w.word, ipa:w.ipa, cn:w.cn, example:w.example||'',
-    status:w.status||'new', wrong:!!w.wrong, star:!!w.star, note:w.note||'', lastCorrect:w.lastCorrect||null}));
-  currentLibId = l.id;
-  document.getElementById('input').value = l.words.map(w=>
-    w.word+(w.ipa?(' /'+w.ipa+'/'):'')+(w.cn?(' '+w.cn):'')+(w.example?(' | '+w.example):'')).join('\n');
-  searchTerm=''; starFilter=false; sortMode='seq';
-  const sb=document.getElementById('searchBox'); if(sb) sb.value='';
-  syncStarFilterBtn();
-  document.querySelectorAll('#sortSeg button').forEach(b=>b.classList.toggle('on', b.dataset.o==='seq'));
-  render(); renderStats(); renderLibs();
-  switchTab('read'); window.scrollTo({top:0,behavior:'smooth'});
+  cards=l.words.map((w,idx)=>({id:idx,seq:idx+1,word:w.word,ipa:w.ipa,cn:w.cn,example:w.example||'',
+    status:w.status||'new',wrong:!!w.wrong,star:!!w.star,note:w.note||'',lastCorrect:w.lastCorrect||null}));
+  currentLibId=l.id;
+  document.getElementById('input').value=l.words.map(w=>w.word+(w.ipa?(' /'+w.ipa+'/'):'')+(w.cn?(' '+w.cn):'')+(w.example?(' | '+w.example):'')).join('\n');
+  searchTerm='';starFilter=false;sortMode='seq';
+  const sb=document.getElementById('searchBox'); if(sb) sb.value=''; syncStarFilterBtn();
+  document.querySelectorAll('#sortSeg button').forEach(b=>b.classList.toggle('on',b.dataset.o==='seq'));
+  render();renderStats();renderLibs();switchTab('read');window.scrollTo({top:0,behavior:'smooth'});
 }
 function delLib(i){
-  const libs = getLibs(); const l = libs[i]; if(!l) return;
+  const libs=getLibs(); const l=libs[i]; if(!l) return;
   if(!confirm('删除词库「'+l.name+'」？不可恢复')) return;
   if(l.id===currentLibId) currentLibId=null;
   libs.splice(i,1); setLibs(libs); renderLibs(); renderStats();
 }
-/* 批量操作 */
 function toggleSelectAllLibs(){
-  const boxes = document.querySelectorAll('#libList .chk');
-  const allChecked = [...boxes].every(b=>b.checked);
-  boxes.forEach(b=>b.checked=!allChecked);
+  const boxes=[...document.querySelectorAll('#libList .chk')];
+  const all=boxes.every(b=>b.checked); boxes.forEach(b=>b.checked=!all);
 }
 function delSelectedLibs(){
-  const idxs = [...document.querySelectorAll('#libList .chk')].filter(b=>b.checked).map(b=>+b.dataset.i);
-  if(!idxs.length){ alert('请先勾选要删除的词库'); return; }
+  const idxs=[...document.querySelectorAll('#libList .chk')].filter(b=>b.checked).map(b=>+b.dataset.i);
+  if(!idxs.length){alert('请先勾选要删除的词库');return;}
   if(!confirm('删除选中的 '+idxs.length+' 套词库？不可恢复')) return;
-  let libs = getLibs();
-  const delIds = new Set(idxs.map(i=>libs[i] && libs[i].id));
+  let libs=getLibs();
+  const delIds=new Set(idxs.map(i=>libs[i]?.id));
   if(delIds.has(currentLibId)) currentLibId=null;
-  libs = libs.filter((l,i)=>!idxs.includes(i));
+  libs=libs.filter((_,i)=>!idxs.includes(i));
   setLibs(libs); renderLibs(); renderStats();
 }
 function clearAllLibs(){
-  if(!getLibs().length){ alert('没有已保存的词库'); return; }
+  if(!getLibs().length){alert('没有已保存的词库');return;}
   if(!confirm('清空全部已保存词库？不可恢复')) return;
   currentLibId=null; setLibs([]); renderLibs(); renderStats();
 }
 function clearWrongBook(){
   const n = cards.filter(c=>c.wrong).length;
-  if(!n){ alert('错题本已经是空的'); return; }
+  if(!n){alert('错题本已经是空的');return;}
   if(!confirm('清空错题本？将移出当前 '+n+' 个错题标记')) return;
-  cards.forEach(c=>c.wrong=false);
-  persistActive(); render(); renderStats();
+  cards.forEach(c=>c.wrong=false); persistActive(); render(); renderStats();
 }
-/* ---------- 词库导入 / 导出 JSON ---------- */
+
 function exportJSON(){
-  const data = { app:'ielts-reader', version:2, exportedAt:new Date().toISOString(), libs:getLibs(), settings };
-  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'ielts-backup-'+new Date().toISOString().slice(0,10)+'.json';
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  const data={app:'ielts-reader',version:2,exportedAt:new Date().toISOString(),libs:getLibs(),settings};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='ielts-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function importJSON(ev){
-  const file = ev.target.files && ev.target.files[0];
-  if(!file){ return; }
-  const reader = new FileReader();
-  reader.onload = ()=>{
+  const file=ev.target.files?.[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
     try{
-      const data = JSON.parse(reader.result);
-      const incoming = Array.isArray(data) ? data : (data.libs||[]);
-      if(!incoming.length){ alert('文件里没有可导入的词库'); ev.target.value=''; return; }
-      const merge = confirm('点「确定」= 合并到现有词库\n点「取消」= 覆盖全部现有词库');
-      let libs = merge ? getLibs() : [];
-      incoming.forEach(l=>{ migrateLib(l); l.id = genId(); libs.unshift(l); });
+      const data=JSON.parse(reader.result);
+      const incoming=Array.isArray(data)?data:(data.libs||[]);
+      if(!incoming.length){alert('文件里没有可导入的词库');ev.target.value='';return;}
+      const merge=confirm('点「确定」= 合并到现有词库\n点「取消」= 覆盖全部现有词库');
+      let libs=merge?getLibs():[];
+      incoming.forEach(l=>{migrateLib(l);l.id=genId();libs.unshift(l);});
       setLibs(libs);
-      if(!merge && data.settings){ Object.assign(settings, data.settings); saveSettings(); applyDark(); }
-      renderLibs(); openSection('history');
-      alert('导入成功，共 '+incoming.length+' 套词库');
-    }catch(e){ alert('导入失败：文件格式不正确\n'+e.message); }
+      if(!merge&&data.settings){Object.assign(settings,data.settings);saveSettings();applyDark();}
+      renderLibs(); openSection('history'); alert('导入成功，共 '+incoming.length+' 套词库');
+    }catch(e){alert('导入失败：文件格式不正确\n'+e.message);}
     ev.target.value='';
   };
   reader.readAsText(file);
 }
-/* ---------- 抽查练习 ---------- */
+
 let quiz = { mode:1, src:'all', items:[], idx:0, timerId:null, remain:0, shuffle:1 };
 let sessionPractice = 0;
 const QUIZ_HINTS = {
@@ -946,63 +881,49 @@ const QUIZ_HINTS = {
   3:'模式·听音默写：只播放发音，隐藏单词/音标/中文，听写拼出单词（雅思听力）'
 };
 function setQuizMode(m){
-  quiz.mode = m;
-  document.querySelectorAll('#quizModeSeg button').forEach(b=>{
-    b.classList.toggle('on', +b.dataset.m===m);
-  });
-  const h = document.getElementById('quizModeHint');
-  if(h) h.textContent = QUIZ_HINTS[m]||'';
+  quiz.mode=m;
+  document.querySelectorAll('#quizModeSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.m===m));
+  const h=document.getElementById('quizModeHint'); if(h) h.textContent=QUIZ_HINTS[m]||'';
 }
 function setQuizSrc(s){
-  quiz.src = s;
-  document.querySelectorAll('#quizSrcSeg button').forEach(b=>{
-    b.classList.toggle('on', b.dataset.s===s);
-  });
+  quiz.src=s;
+  document.querySelectorAll('#quizSrcSeg button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));
 }
 function setQuizShuffle(v){
-  quiz.shuffle = Number(v);
-  document.querySelectorAll('#quizShuffleSeg button').forEach(b=>{
-    b.classList.toggle('on', +b.dataset.shuffle === quiz.shuffle);
-  });
+  quiz.shuffle=Number(v);
+  document.querySelectorAll('#quizShuffleSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.shuffle===quiz.shuffle));
 }
 function quizPool(){
-  let pool = cards.slice();
-  if(quiz.src==='review') pool = pool.filter(c=>c.status==='review');
-  else if(quiz.src==='wrong') pool = pool.filter(c=>c.wrong);
-  else if(quiz.src==='star') pool = pool.filter(c=>c.star);
-  if(quiz.mode===2) pool = pool.filter(c=>c.ipa);
+  let pool=cards.slice();
+  if(quiz.src==='review') pool=pool.filter(c=>c.status==='review');
+  else if(quiz.src==='wrong') pool=pool.filter(c=>c.wrong);
+  else if(quiz.src==='star') pool=pool.filter(c=>c.star);
+  if(quiz.mode===2) pool=pool.filter(c=>c.ipa);
   return pool;
 }
 function maskWord(word){
-  if((settings.maskLevel||0.4) === 0){
-    return word;
-  }
-  const chars = word.split('');
-  const letterIdx = [];
-  chars.forEach((c,i)=>{ if(/[a-zA-Z]/.test(c)) letterIdx.push(i); });
+  if((settings.maskLevel||0.4)===0) return word;
+  const chars=word.split('');
+  const letterIdx=[];
+  chars.forEach((c,i)=>{if(/[a-zA-Z]/.test(c)) letterIdx.push(i);});
   if(!letterIdx.length) return word;
-  let n = Math.max(1, Math.round(letterIdx.length*(settings.maskLevel||0.4)));
-  n = Math.min(n, letterIdx.length);
-  const sh = letterIdx.slice();
+  let n=Math.max(1,Math.round(letterIdx.length*(settings.maskLevel||0.4)));
+  n=Math.min(n,letterIdx.length);
+  const sh=letterIdx.slice();
   for(let i=sh.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sh[i],sh[j]]=[sh[j],sh[i]];}
-  const blanked = new Set(sh.slice(0,n));
-  return chars.map((c,i)=> blanked.has(i) ? '_' : c).join('');
+  const blanked=new Set(sh.slice(0,n));
+  return chars.map((c,i)=> blanked.has(i)?'_':c).join('');
 }
-/* 练习设置开关 */
-function setMask(v){ settings.maskLevel=v; saveSettings();
-  document.querySelectorAll('#maskSeg button').forEach(b=>b.classList.toggle('on', +b.dataset.k===v)); }
-function setTimer(v){ settings.quizTimer=v; saveSettings();
-  document.querySelectorAll('#timerSeg button').forEach(b=>b.classList.toggle('on', +b.dataset.t===v)); }
+function setMask(v){ settings.maskLevel=v; saveSettings(); document.querySelectorAll('#maskSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.k===v)); }
+function setTimer(v){ settings.quizTimer=v; saveSettings(); document.querySelectorAll('#timerSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.t===v)); }
 function toggleMute(){ settings.muteQuiz=!settings.muteQuiz; saveSettings(); syncQuizOptBtns(); }
 function toggleExQuiz(){ settings.showExampleQuiz=!settings.showExampleQuiz; saveSettings(); syncQuizOptBtns(); }
 function syncQuizOptBtns(){
-  const mb=document.getElementById('muteBtn');
-  if(mb){ mb.textContent=settings.muteQuiz?'🔇 已静音':'🔊 自动发音'; mb.classList.toggle('on', settings.muteQuiz); }
-  const eb=document.getElementById('exQuizBtn');
-  if(eb){ eb.textContent='例句:'+(settings.showExampleQuiz?'开':'关'); eb.classList.toggle('on', settings.showExampleQuiz); }
+  const mb=document.getElementById('muteBtn'); if(mb){ mb.textContent=settings.muteQuiz?'🔇 已静音':'🔊 自动发音'; mb.classList.toggle('on',settings.muteQuiz); }
+  const eb=document.getElementById('exQuizBtn'); if(eb){ eb.textContent='例句:'+(settings.showExampleQuiz?'开':'关'); eb.classList.toggle('on',settings.showExampleQuiz); }
 }
 function startQuiz(){
-  if(!cards.length){ alert('请先在「跟读」页导入并解析单词'); return; }
+  if(!cards.length){alert('请先在「跟读」页导入并解析单词');return;}
   let pool = quizPool();
   if(!pool.length){
     const why = quiz.src==='review' ? '没有「待复习」的单词，去卡片上标记一下'
@@ -1012,4 +933,50 @@ function startQuiz(){
               : '当前范围内没有可练习的单词';
     alert(why); return;
   }
-  if(quiz.src==='due'
+  if(quiz.src==='due' && quiz.shuffle===0){
+    pool.sort((a,b)=>(a.lastCorrect||0)-(b.lastCorrect||0));
+  }else{
+    for(let i=pool.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+  }
+  quiz.items = pool.map(c=>({ id:c.id, word:c.word, ipa:c.ipa, cn:c.cn, example:c.example||'',
+    masked: quiz.mode===1 ? maskWord(c.word) : '', userAns:'', result:null, skipped:false }));
+  quiz.idx = 0;
+  sessionPractice++;
+  if(currentLibId!=null){
+    const libs = getLibs(); const lib = libs.find(l=>l.id===currentLibId);
+    if(lib){ lib.practiceCount = (lib.practiceCount||0)+1; setLibs(libs); renderLibs(); }
+  }
+  renderStats();
+  document.getElementById('quizEmpty').classList.add('hidden');
+  document.getElementById('quizWrap').classList.remove('hidden');
+  renderQuiz();
+  document.getElementById('quizWrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function endQuiz(){
+  clearQuizTimer();
+  quiz.items=[]; quiz.idx=0;
+  const w=document.getElementById('quizWrap'); if(w){ w.classList.add('hidden'); w.innerHTML=''; }
+  const e=document.getElementById('quizEmpty'); if(e) e.classList.remove('hidden');
+}
+function quizStats(){
+  let ok=0,no=0,skip=0;
+  quiz.items.forEach(it=>{ if(it.result===true) ok++; else if(it.result===false) no++; else if(it.skipped) skip++; });
+  return {ok,no,skip,done:ok+no,total:quiz.items.length};
+}
+function renderQuiz(){
+  clearQuizTimer();
+  const it = quiz.items[quiz.idx]; if(!it) return;
+  const s = quizStats();
+  let promptHtml, mainHtml, placeholder;
+  if(quiz.mode===1){
+    promptHtml = `音标 <span class="quiz-ipa">${it.ipa?('/'+esc(it.ipa)+'/'):'（无）'}</span><br>中文：${esc(it.cn)||'（无）'}`;
+    mainHtml = `<div class="quiz-main"><span class="mask">${esc(it.masked)}</span></div>`;
+    placeholder = '输入完整单词';
+  } else if(quiz.mode===2){
+    promptHtml = `单词 <b>${esc(it.word)}</b><br>中文：${esc(it.cn)||'（无）'}`;
+    mainHtml = `<div class="quiz-main quiz-ipa">/ _ _ _ _ /</div>`;
+    placeholder = '输入音标（如 əˈbændən）';
+ 
